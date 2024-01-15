@@ -1,0 +1,27 @@
+{
+  "name": "sanity-sync-app",
+  "version": "1.0.0",
+  "main": "web/index.js",
+  "license": "UNLICENSED",
+  "scripts": {
+    "shopify": "shopify",
+    "build": "shopify app build",
+    "dev": "shopify app dev",
+    "info": "shopify app info",
+    "generate": "shopify app generate",
+    "deploy": "shopify app deploy"
+  },
+  "dependencies": {
+    "@sanity/client": "^6.11.1",
+    "@shopify/app": "3.53.0",
+    "@shopify/cli": "3.53.0",
+    "dotenv": "^16.3.1"
+  },
+  "author": "gen",
+  "private": true,
+  "workspaces": [
+    "extensions/*",
+    "web",
+    "web/frontend"
+  ]
+}

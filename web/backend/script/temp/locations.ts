@@ -1,0 +1,32 @@
+const data = [
+  {
+    _updatedAt: '2024-01-03T11:05:41Z',
+    countryCode: 'UA',
+    _createdAt: '2024-01-03T11:05:41Z',
+    _rev: 'kU42CGRkqauFo99X7RKS01',
+    _type: 'location',
+    name: 'Shop location',
+    _id: 'kU42CGRkqauFo99X7RKS2j',
+    id: '73318596864',
+  },
+  {
+    name: 'Sydney Warehouse',
+    _id: 'kU42CGRkqauFo99X7RKSAr',
+    id: '73318793472',
+    _updatedAt: '2024-01-03T11:05:42Z',
+    countryCode: 'AU',
+    _createdAt: '2024-01-03T11:05:42Z',
+    _rev: 'kU42CGRkqauFo99X7RKS89',
+    _type: 'location',
+  },
+  {
+    _rev: 'kU42CGRkqauFo99X7RKSOP',
+    _type: 'location',
+    name: 'Washington DC Warehouse',
+    _id: 'kU42CGRkqauFo99X7RKSR7',
+    id: '73318826240',
+    _updatedAt: '2024-01-03T11:05:43Z',
+    countryCode: 'US',
+    _createdAt: '2024-01-03T11:05:43Z',
+  },
+];
