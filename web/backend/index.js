@@ -3,12 +3,12 @@ import { readFileSync } from 'fs';
 import express from 'express';
 import serveStatic from 'serve-static';
 
-import shopify from './backend/config/shopify.js';
-import { webhookHandlers } from './backend/webhooks/index.js';
-import { PORT } from './backend/config/vars/envs.js';
-import { STATIC_PATH } from './backend/config/vars/constants.js';
-import { initialSyncScript } from './backend/script/initialSyncScript.js';
-import sanityService from './backend/services/sanity.service.js';
+import shopify from './config/shopify.js';
+import { webhookHandlers } from './webhooks/index.js';
+import { PORT } from './config/vars/envs.js';
+import { STATIC_PATH } from './config/vars/constants.js';
+import { initialSyncScript } from './script/initialSyncScript.js';
+import sanityService from './services/sanity.service.js';
 
 const app = express();
 
@@ -72,13 +72,12 @@ app.get('/api/test', async (_req, res) => {
       1
     );
 
-  console.log('res', JSON.stringify(result, null, 2));
-
   if (!result) {
     res.status(200).send({ success: false, data: null });
   }
 
   console.timeEnd('update_query');
+  console.log('result', JSON.stringify(result?.locations, null, 2));
 
   res.status(200).send({ success: true, data: result });
 });

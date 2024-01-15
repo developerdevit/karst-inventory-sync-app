@@ -1,9 +1,7 @@
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 
-import App from "./App";
-import { initI18n } from "./utils/i18nUtils";
+import App from './App';
 
-// Ensure that locales are loaded before rendering the app
-initI18n().then(() => {
-  ReactDOM.render(<App />, document.getElementById("app"));
-});
+const container = document.getElementById('app');
+const root = createRoot(container);
+root.render(<App />);

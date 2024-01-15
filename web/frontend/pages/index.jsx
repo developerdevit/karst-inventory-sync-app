@@ -2,9 +2,8 @@ import {
   Card,
   Page,
   Layout,
-  TextContainer,
   Image,
-  Stack,
+  BlockStack,
   Link,
   Text,
   Spinner,
@@ -13,7 +12,6 @@ import {
 import { TitleBar } from '@shopify/app-bridge-react';
 import { useTranslation, Trans } from 'react-i18next';
 
-import { trophyImage } from '../assets';
 import { useState } from 'react';
 import { useAuthenticatedFetch } from '../hooks';
 import {
@@ -171,12 +169,12 @@ export default function HomePage() {
     <Page narrowWidth>
       <TitleBar
         title={'Inventory Sync App'}
-        primaryAction={{
-          content: 'Run sync script',
-          destructive: false,
-          onAction: handleRunScript,
-          loading: loading,
-        }}
+        // primaryAction={{
+        //   content: 'Run sync script',
+        //   destructive: false,
+        //   onAction: handleRunScript,
+        //   loading: loading,
+        // }}
         secondaryActions={[
           {
             content: 'Fetch test',
@@ -187,97 +185,93 @@ export default function HomePage() {
       />
       <Layout>
         <Layout.Section>
-          <Card sectioned>
-            <Stack
-              wrap={false}
-              spacing='extraTight'
-              distribution='trailing'
-              alignment='center'
-            >
-              <Stack.Item fill>
-                <TextContainer spacing='loose'>
-                  <Text as='h2' variant='headingMd'>
-                    Locations and Product Variants
-                  </Text>
-                  {loading ? (
+          <Card>
+            <BlockStack>
+              {/* <Stack.Item fill> */}
+              <Text as='h2' variant='headingMd'>
+                Locations and Product Variants
+              </Text>
+              {loading ? (
+                <>
+                  <p>
+                    Preparing inventory locations and product variants data...
+                  </p>
+                  <p style={{ marginTop: 0 }}>This may take some time.</p>
+                  <div
+                    style={{
+                      width: '100%',
+                      margin: '2rem auto',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Spinner />
+                  </div>
+                </>
+              ) : (
+                <>
+                  {data ? (
                     <>
-                      <p>
-                        Preparing inventory locations and product variants
-                        data...
-                      </p>
-                      <p style={{ marginTop: 0 }}>This may take some time.</p>
-                      <div
-                        style={{
-                          width: '100%',
-                          margin: '2rem auto',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        <Spinner />
-                      </div>
+                      <h3 style={{ fontSize: '14px', fontWeight: 600 }}>
+                        Locations:
+                      </h3>
+                      <ul style={{ marginTop: 0, listStyle: 'none' }}>
+                        {extractLocations(data)?.map((str, idx) => (
+                          <li key={idx}>{str}</li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : null}
+                  {data ? (
+                    <>
+                      <h3 style={{ fontSize: '14px', fontWeight: 600 }}>
+                        Variants:
+                      </h3>
+                      <ul style={{ marginTop: 0 }}>
+                        {extractVariants(data)?.map((variant, idx) => (
+                          <li
+                            key={idx}
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              marginBottom: '0.5rem',
+                            }}
+                          >
+                            <p style={{ fontWeight: 600 }}>{variant?.title}</p>
+                            {variant?.locations?.map((loc) => (
+                              <span
+                                key={loc}
+                                style={{ paddingLeft: '0.25rem' }}
+                              >
+                                {loc}
+                              </span>
+                            ))}
+                          </li>
+                        ))}
+                      </ul>
                     </>
                   ) : (
-                    <>
-                      {data ? (
-                        <>
-                          <h3 style={{ fontSize: '14px', fontWeight: 600 }}>
-                            Locations:
-                          </h3>
-                          <ul style={{ marginTop: 0, listStyle: 'none' }}>
-                            {extractLocations(data)?.map((str, idx) => (
-                              <li key={idx}>{str}</li>
-                            ))}
-                          </ul>
-                        </>
-                      ) : null}
-                      {data ? (
-                        <>
-                          <h3 style={{ fontSize: '14px', fontWeight: 600 }}>
-                            Variants:
-                          </h3>
-                          <ul style={{ marginTop: 0 }}>
-                            {extractVariants(data)?.map((variant, idx) => (
-                              <li
-                                key={idx}
-                                style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  marginBottom: '0.5rem',
-                                }}
-                              >
-                                <p style={{ fontWeight: 600 }}>
-                                  {variant?.title}
-                                </p>
-                                {variant?.locations?.map((loc) => (
-                                  <span
-                                    key={loc}
-                                    style={{ paddingLeft: '0.25rem' }}
-                                  >
-                                    {loc}
-                                  </span>
-                                ))}
-                              </li>
-                            ))}
-                          </ul>
-                        </>
-                      ) : (
-                        <EmptyState
-                          heading='No data'
-                          image='https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png'
-                        >
-                          <p>
-                            Please run the script to synchronize initial Shopify
-                            data with Sanity.
-                          </p>
-                        </EmptyState>
-                      )}
-                    </>
+                    <EmptyState
+                      heading='No data'
+                      image='https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png'
+                      action={{
+                        content: 'Run sync script',
+                        destructive: false,
+                        onAction: handleRunScript,
+                        loading: loading,
+                      }}
+                    >
+                      <p>
+                        Please run the script to synchronize initial Shopify
+                        data with Sanity.
+                      </p>
+                    </EmptyState>
                   )}
-                </TextContainer>
-              </Stack.Item>
-            </Stack>
+                </>
+              )}
+              {/* </Stack.Item> */}
+            </BlockStack>
           </Card>
         </Layout.Section>
       </Layout>
