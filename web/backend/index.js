@@ -15,10 +15,6 @@ import { getRedisDbReadableInfo } from './utils/getRedisDbReadableInfo.js';
 
 const app = express();
 
-// retry on bull
-// add logger for errors
-// clear redis after work ("task remove")
-
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
 app.get(
@@ -62,46 +58,6 @@ app.post('/api/run-sync-script', async (_req, res) => {
 // TEST ENDPOINT
 app.get('/api/test', async (_req, res) => {
   res.status(200).send({ success: true, message: 'Hello', data: {} });
-});
-// REMOVE NEXT ROUTE
-app.post('/api/add-job', async (req, res) => {
-  const body = req?.body;
-  const session = res.locals.shopify.session;
-
-  try {
-    //
-    const arr = ['44252807889152', '44252808544512'];
-    for (const id of arr) {
-      const result = await sanityService.deleteProductVariantById({
-        id,
-      });
-
-      console.log('result', result);
-    }
-
-    // const data = await shopifyService.getInventoryItemWithLevelsById({ session });
-
-    // const result = await updateInventoryLevelsWebhookQueue.add(name, {
-    //   data: id,
-    // });
-
-    // const jobs = await createInventoryItemsWebhookQueue.getJobs();
-
-    // for (const job of jobs) {
-    //   console.log('job.name', job?.name);
-    // }
-
-    // updateInventoryLevelsWebhookQueue.keys
-    // const result = await redisClient.get('first');
-    // console.log(
-    //   'updateInventoryLevelsWebhookQueue.count',
-    //   await updateInventoryLevelsWebhookQueue.count()
-    // );
-  } catch (error) {
-    console.log(error);
-  }
-
-  res.status(200).send({ success: true, message: 'Job added to the queue!' });
 });
 
 app.get('/api/info', async (_req, res) => {
