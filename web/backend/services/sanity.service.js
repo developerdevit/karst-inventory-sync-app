@@ -2,7 +2,7 @@ import sanityClient from '../config/sanity.js';
 import { stockLocations } from '../config/vars/stockLocations.js';
 
 class SanityService {
-  // product && productVariants functions
+  //#region product && productVariants functions
   async getProducts() {
     try {
       const products = await sanityClient.fetch(
@@ -59,29 +59,31 @@ class SanityService {
     }
   }
 
-  async updateProductVariantByInventoryItemIdAndLocationIdAndQuantity(
-    inventoryItemId,
-    shopifyLocationId,
-    quantity = 1
-  ) {
+  async updateProductVariantByInventoryItemIdAndLocationIdAndQuantity({
+    location_id,
+    available = 1,
+    productVariantId,
+  }) {
     try {
-      const sanityLocationObj = await this.getLocationByShopifyId(
-        shopifyLocationId
-      );
+      const sanityLocationObj = await this.getLocationByShopifyId(location_id);
 
       if (!sanityLocationObj?._id) {
-        console.warn(`Location with shopifyId ${shopifyLocationId} not found.`);
+        console.warn(`Location with shopifyId ${location_id} not found.`);
         return null;
       }
 
-      const variant = await sanityClient.fetch(`
-      *[_type == "productVariant" && inventoryItemId == "${inventoryItemId}" && "${sanityLocationObj?._id}" in locations[].location._ref][0]{
+      const variant = await sanityClient.fetch(
+        `*[_type == "productVariant" && store.id == ${productVariantId}][0]{
         _id,
         locations,
-      }
-      `);
+      }`
+      );
 
-      const _id = variant?._id;
+      if (!variant?._id) {
+        console.warn(`Variant with id ${productVariantId} not found.`);
+        return null;
+      }
+
       const locations = variant?.locations ?? [];
 
       const searchedLocationIdx = locations.findIndex(
@@ -89,30 +91,32 @@ class SanityService {
       );
 
       if (searchedLocationIdx === -1) {
-        return null;
+        return await sanityClient
+          .patch(variant?._id)
+          .insert('before', `locations[0]`, [
+            {
+              location: {
+                _type: 'location',
+                _ref: sanityLocationObj?._id,
+              },
+              quantity: available,
+            },
+          ])
+          .commit({ autoGenerateArrayKeys: true });
+      } else {
+        return await sanityClient
+          .patch(variant?._id)
+          .insert('replace', `locations[${searchedLocationIdx}]`, [
+            {
+              location: {
+                _type: 'location',
+                _ref: sanityLocationObj?._id,
+              },
+              quantity: available,
+            },
+          ])
+          .commit({ autoGenerateArrayKeys: true });
       }
-
-      const searchedLocation = locations?.[searchedLocationIdx];
-
-      if (searchedLocation?.quantity < quantity) {
-        console.warn(
-          `Not enough amount for productVariant with _id "${_id}" and current quantity ${searchedLocation?.quantity}.`
-        );
-      }
-
-      const result = await sanityClient
-        .patch(_id)
-        .insert('replace', `locations[${searchedLocationIdx}]`, [
-          {
-            ...searchedLocation,
-            quantity: searchedLocation?.quantity - quantity,
-          },
-        ])
-        .commit();
-
-      // console.log('update result', JSON.stringify(result, null, 2));
-
-      return result;
     } catch (error) {
       console.log(
         'sanityService.updateProductVariantByInventoryItemIdAndLocationIdAndQuantity error: ',
@@ -122,13 +126,77 @@ class SanityService {
     }
   }
 
-  // location functions
+  async updateProductVariantById({ id, inventory_item_id }) {
+    try {
+      const result = await sanityClient
+        .patch({
+          query: `*[_type == "productVariant" && store.gid == "${id}"]`,
+        })
+        .set({
+          inventoryItemId: inventory_item_id?.toString(),
+        })
+        .setIfMissing({
+          locations: [],
+        })
+        .commit();
+
+      return result;
+    } catch (error) {
+      console.log('sanityService.updateProductVariantById error: ', error);
+      return null;
+    }
+  }
+
+  async deleteProductVariantById({ id }) {
+    try {
+      const variant = await sanityClient.delete({
+        query: `*[_type == "productVariant" && store.gid == "gid://shopify/ProductVariant/${id}"]`,
+      });
+
+      console.log('removed variant', variant);
+
+      return variant;
+    } catch (error) {
+      console.log('sanityService.deleteProductVariantById error: ', error);
+      return null;
+    }
+  }
+
+  async deleteProductVariantByInventoryItemId({ inventory_item_id }) {
+    try {
+      const variant = await sanityClient.delete({
+        query: `*[_type == "productVariant" && inventoryItemId == "${inventory_item_id}"]`,
+      });
+
+      console.log('removed variant', variant);
+
+      return variant;
+    } catch (error) {
+      console.log(
+        'sanityService.deleteProductVariantByInventoryItemId error: ',
+        error
+      );
+      return null;
+    }
+  }
+  //#endregion
+
+  //#region location functions
   async getLocations() {
     try {
       return await sanityClient.fetch(`*[_type == "location"]`);
     } catch (error) {
       console.log('sanityService.getLocations error: ', error);
       return [];
+    }
+  }
+
+  async getLocationsCount() {
+    try {
+      return await sanityClient.fetch(`count(*[_type == "location"])`);
+    } catch (error) {
+      console.log('sanityService.getLocationsCount error: ', error);
+      return 0;
     }
   }
 
@@ -142,8 +210,9 @@ class SanityService {
       return null;
     }
   }
+  //#endregion
 
-  // init functions
+  //#region init functions
   async init_updateSingleVariantWithLocations(_id, inventoryItemId, locations) {
     try {
       const res = await sanityClient
@@ -232,6 +301,7 @@ class SanityService {
       return [];
     }
   }
+  //#endregion
 }
 
 const sanityService = new SanityService();

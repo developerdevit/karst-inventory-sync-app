@@ -16,6 +16,7 @@ logs
 
 # ngrok tunnel file
 config/tunnel.pid
+ngrok.txt
 
 # vite build output
 dist/
@@ -25,3 +26,4 @@ extensions/*/build
 
 # Node library SQLite database
 web/database.sqlite
+

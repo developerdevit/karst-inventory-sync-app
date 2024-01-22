@@ -1,10 +1,10 @@
-import { bulkOperationRunQuery } from '../graphql/queries/locations.js';
+import { BULK_OPERATION_RUN_QUERY } from '../graphql/queries/locations.graphql.js';
 
 export async function createBulkOperation(client) {
   try {
     const bulkRunResponse = await client.query({
       data: {
-        query: bulkOperationRunQuery,
+        query: BULK_OPERATION_RUN_QUERY,
       },
     });
 

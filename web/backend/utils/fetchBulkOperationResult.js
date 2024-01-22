@@ -1,10 +1,10 @@
-import { bulkOperationResultQuery } from '../graphql/queries/locations.js';
+import { BULK_OPERATION_RESULT_QUERY } from '../graphql/queries/locations.graphql.js';
 
 export async function fetchBulkOperationResult(client) {
   try {
     const bulkOperationResultResponse = await client.query({
       data: {
-        query: bulkOperationResultQuery,
+        query: BULK_OPERATION_RESULT_QUERY,
       },
     });
 

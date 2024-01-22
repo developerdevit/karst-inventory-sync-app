@@ -1,8 +1,6 @@
-function extractLocations(response) {
-  const success = response?.success;
-
-  if (success) {
-    const locationsArr = response?.data?.data?.locationsArr;
+function extractLocations(data) {
+  if (data) {
+    const locationsArr = data?.data?.locationsArr;
 
     const preparedLocations = locationsArr?.map(
       (el) => `🛍️  StockLocation: ${el.name} (${el.countryCode}) - ${el?.id}`
@@ -14,12 +12,10 @@ function extractLocations(response) {
   return [];
 }
 
-function extractVariants(response) {
-  const success = response?.success;
-
-  if (success) {
-    const variantsWithLocations = response?.data?.data?.variantsWithLocations;
-    const locationsArr = response?.data?.data?.locationsArr;
+function extractVariants(data) {
+  if (data) {
+    const variantsWithLocations = data?.data?.variantsWithLocations;
+    const locationsArr = data?.data?.locationsArr;
 
     const preparedVariants = variantsWithLocations?.map((el) => {
       const locations = el?.locations?.map((loc) => {

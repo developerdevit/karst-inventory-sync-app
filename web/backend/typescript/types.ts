@@ -32,7 +32,7 @@ export type TSingleLocationResponse = {
 
 export type TBulkOperationRunResponse = {
   data: {
-    bulkOperationRunQuery: {
+    BULK_OPERATION_RUN_QUERY: {
       bulkOperation: {
         id: string;
         status: string;

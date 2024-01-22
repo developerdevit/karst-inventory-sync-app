@@ -1,3 +1,6 @@
+import { updateInventoryLevelsWebhookQueue } from '../../config/redis.js';
+import { QUEUE_SETTINGS } from '../../config/vars/constants.js';
+
 export const inventoryUpdate = async (topic, shop, body) => {
   try {
     console.log('inventoryUpdate callback', shop, topic);
@@ -9,17 +12,47 @@ export const inventoryUpdate = async (topic, shop, body) => {
 
 export const inventoryCreate = async (topic, shop, body) => {
   try {
-    console.log('inventoryCreate callback', shop, topic);
-    console.log('inventoryCreate body', JSON.stringify(body, null, 2));
+    console.log('inventoryItemsCreate callback', topic, shop);
+
+    const parsedBody = JSON.parse(body);
+
+    if ('id' in parsedBody) {
+      // inventoryItemId
+      const { id } = parsedBody;
+
+      await updateInventoryLevelsWebhookQueue.add(
+        topic,
+        {
+          inventory_item_id: `gid://shopify/InventoryItem/${id}`,
+          shop,
+        },
+        QUEUE_SETTINGS
+      );
+    }
   } catch (e) {
-    console.log('inventoryCreate callback error:', e);
+    console.log('inventoryItemsCreate callback error:', e);
   }
 };
 
 export const inventoryDelete = async (topic, shop, body) => {
   try {
-    console.log('inventoryDelete callback', shop, topic);
-    console.log('inventoryDelete body', JSON.stringify(body, null, 2));
+    console.log('inventoryDelete callback', topic);
+
+    const parsedBody = JSON.parse(body);
+
+    if ('id' in parsedBody) {
+      // inventoryItemId
+      const { id } = parsedBody;
+
+      await updateInventoryLevelsWebhookQueue.add(
+        topic,
+        {
+          inventory_item_id: `gid://shopify/InventoryItem/${id}`,
+          shop,
+        },
+        QUEUE_SETTINGS
+      );
+    }
   } catch (e) {
     console.log('inventoryDelete callback error:', e);
   }
@@ -27,8 +60,32 @@ export const inventoryDelete = async (topic, shop, body) => {
 
 export const inventoryLevelsUpdate = async (topic, shop, body) => {
   try {
-    console.log('inventoryLevelsUpdate callback', shop, topic);
-    console.log('inventoryLevelsUpdate body', JSON.stringify(body, null, 2));
+    console.log('inventoryLevelsUpdate callback', topic);
+
+    const parsedBody = JSON.parse(body);
+
+    if (
+      'inventory_item_id' in parsedBody &&
+      'location_id' in parsedBody &&
+      'available' in parsedBody
+    ) {
+      const { inventory_item_id, location_id, available } = parsedBody;
+
+      await updateInventoryLevelsWebhookQueue
+        .add(
+          topic,
+          {
+            inventory_item_id,
+            location_id,
+            available,
+            shop,
+          },
+          QUEUE_SETTINGS
+        )
+        .catch((err) =>
+          console.log('updateInventoryLevelsWebhookQueue error: ', err)
+        );
+    }
   } catch (e) {
     console.log('inventoryLevelsUpdate callback error:', e);
   }

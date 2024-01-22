@@ -1,18 +1,4 @@
-const getLocations = `
-  {
-    locations(first: 100) {
-      nodes {
-        name
-        id
-        address {
-          countryCode
-        }
-      }
-    }
-  }
-`;
-
-const getInventoryLevelsByLocationId = `
+const GET_INVENTORY_LEVELS_BY_LOCATION_ID = `
     query($id: ID!) {
         location(id: $id){
             id
@@ -33,9 +19,9 @@ const getInventoryLevelsByLocationId = `
     }
 `;
 
-const bulkOperationRunQuery = `
+const BULK_OPERATION_RUN_QUERY = `
 mutation {
-    bulkOperationRunQuery(
+  bulkOperationRunQuery(
       query:"""
       {
         locations {
@@ -79,7 +65,7 @@ mutation {
   }
 `;
 
-const bulkOperationResultQuery = `
+const BULK_OPERATION_RESULT_QUERY = `
   query {   
     currentBulkOperation {     
       id     
@@ -92,8 +78,7 @@ const bulkOperationResultQuery = `
 `;
 
 export {
-  getLocations,
-  getInventoryLevelsByLocationId,
-  bulkOperationRunQuery,
-  bulkOperationResultQuery,
+  GET_INVENTORY_LEVELS_BY_LOCATION_ID,
+  BULK_OPERATION_RUN_QUERY,
+  BULK_OPERATION_RESULT_QUERY,
 };

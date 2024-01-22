@@ -13,6 +13,11 @@ const SANITY_API_VERSION = process.env.SANITY_API_VERSION;
 const SHOPIFY_API_ACCESS_TOKEN = process.env.SHOPIFY_API_ACCESS_TOKEN;
 const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN;
 
+const REDIS_HOST = process.env.REDIS_HOST ?? 'localhost';
+const REDIS_PORT = process.env.REDIS_PORT ?? 6379;
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD ?? 'admin';
+const REDIS_USER = process.env.REDIS_USER ?? 'default';
+
 export {
   HOST,
   PORT,
@@ -23,4 +28,8 @@ export {
   SANITY_PROJECT_ID,
   SHOPIFY_API_ACCESS_TOKEN,
   SHOPIFY_DOMAIN,
+  REDIS_HOST,
+  REDIS_PORT,
+  REDIS_PASSWORD,
+  REDIS_USER,
 };

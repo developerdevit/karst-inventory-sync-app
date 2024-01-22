@@ -9,8 +9,15 @@ import { PORT } from './config/vars/envs.js';
 import { STATIC_PATH } from './config/vars/constants.js';
 import { initialSyncScript } from './script/initialSyncScript.js';
 import sanityService from './services/sanity.service.js';
+import { redisClient } from './config/redis.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { getRedisDbReadableInfo } from './utils/getRedisDbReadableInfo.js';
 
 const app = express();
+
+// retry on bull
+// add logger for errors
+// clear redis after work ("task remove")
 
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
@@ -39,45 +46,70 @@ app.use('/api/*', shopify.validateAuthenticatedSession());
 
 app.use(express.json());
 
-app.get('/api/products/count', async (_req, res) => {
-  const countData = await shopify.api.rest.Product.count({
-    session: res.locals.shopify.session,
-  });
-  res.status(200).send(countData);
-});
-
 app.post('/api/run-sync-script', async (_req, res) => {
   const session = res.locals.shopify.session;
 
   const result = await initialSyncScript(session);
 
-  console.log('res', result);
-
   if (!result) {
-    res.status(200).send({ success: false, data: null });
+    res.status(404).send({ success: false, data: null });
   }
 
   res.status(200).send({ success: true, data: result });
 });
 
+// REMOVE
 // TEST ENDPOINT
 app.get('/api/test', async (_req, res) => {
-  console.time('update_query');
+  res.status(200).send({ success: true, message: 'Hello', data: {} });
+});
+// REMOVE NEXT ROUTE
+app.post('/api/add-job', async (req, res) => {
+  const body = req?.body;
+  const session = res.locals.shopify.session;
 
-  // TODO: remove HARDCODED params and replace into webhook INVENTORY_LEVELS_UPDATE
-  const result =
-    await sanityService.updateProductVariantByInventoryItemIdAndLocationIdAndQuantity(
-      '46283008704768',
-      '73318596864',
-      1
-    );
+  try {
+    //
+    const arr = ['44252807889152', '44252808544512'];
+    for (const id of arr) {
+      const result = await sanityService.deleteProductVariantById({
+        id,
+      });
 
-  if (!result) {
-    res.status(200).send({ success: false, data: null });
+      console.log('result', result);
+    }
+
+    // const data = await shopifyService.getInventoryItemWithLevelsById({ session });
+
+    // const result = await updateInventoryLevelsWebhookQueue.add(name, {
+    //   data: id,
+    // });
+
+    // const jobs = await createInventoryItemsWebhookQueue.getJobs();
+
+    // for (const job of jobs) {
+    //   console.log('job.name', job?.name);
+    // }
+
+    // updateInventoryLevelsWebhookQueue.keys
+    // const result = await redisClient.get('first');
+    // console.log(
+    //   'updateInventoryLevelsWebhookQueue.count',
+    //   await updateInventoryLevelsWebhookQueue.count()
+    // );
+  } catch (error) {
+    console.log(error);
   }
 
-  console.timeEnd('update_query');
-  console.log('result', JSON.stringify(result?.locations, null, 2));
+  res.status(200).send({ success: true, message: 'Job added to the queue!' });
+});
+
+app.get('/api/info', async (_req, res) => {
+  const result = await getRedisDbReadableInfo(redisClient);
+
+  if (!result) {
+    res.status(404).send({ success: false, data: null });
+  }
 
   res.status(200).send({ success: true, data: result });
 });
@@ -92,15 +124,6 @@ app.use('/*', shopify.ensureInstalledOnShop(), async (_req, res, _next) => {
     .send(readFileSync(join(STATIC_PATH, 'index.html')));
 });
 
-app.use((err, req, res, next) => {
-  const session = res?.locals?.shopify?.session;
-
-  if (session) {
-    console.error(err?.message + ' ' + JSON.stringify(session, null, 2));
-  }
-
-  console.error(err);
-  res.status(err?.status || 500).json({ error: err?.message });
-});
+app.use(errorHandler);
 
 app.listen(PORT);
