@@ -7,10 +7,10 @@
     "debug": "node --inspect-brk index.js",
     "dev": "cross-env NODE_ENV=development nodemon .index.js --ignore ../frontend",
     "serve": "cross-env NODE_ENV=production node index.js",
-    "pm2:serve": "../node_modules/.bin/pm2 startOrRestart ecosystem.config.cjs",
-    "pm2:log": "../node_modules/.bin/pm2 log",
-    "pm2:restart": "../node_modules/.bin/pm2 restart all",
-    "pm2:delete": "../node_modules/.bin/pm2 delete all"
+    "pm2:serve": "./node_modules/.bin/pm2 startOrRestart ecosystem.config.cjs",
+    "pm2:log": "./node_modules/.bin/pm2 log",
+    "pm2:restart": "./node_modules/.bin/pm2 restart all",
+    "pm2:delete": "./node_modules/.bin/pm2 delete all"
   },
   "type": "module",
   "engines": {
