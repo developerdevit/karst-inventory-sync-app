@@ -22,7 +22,7 @@ try {
   });
 
   sessionStorage = new RedisSessionStorage(
-    `redis://${REDIS_USER}:${REDIS_PASSWORD}@${REDIS_HOST}/1`
+    `redis://${REDIS_USER}:${REDIS_PASSWORD}@${REDIS_HOST}/0`
   );
 
   connection = new RedisConnection(redisClient);

@@ -89,7 +89,7 @@ app.get('/api/download-logs', (req, res) => {
 app.use(shopify.cspHeaders());
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
-//
+// ,
 app.use('/*', shopify.ensureInstalledOnShop(), async (_req, res, _next) => {
   console.log('HERE ensureInstalledOnShop');
   return res
