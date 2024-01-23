@@ -18,7 +18,9 @@ let redisClient, connection, sessionStorage;
 // const REDIS_URL = ;
 
 try {
-  redisClient = new Redis(REDIS_URL);
+  redisClient = new Redis(REDIS_URL, {
+    maxRetriesPerRequest: null,
+  });
 
   // REDIS_PORT, REDIS_HOST, {
   //   maxRetriesPerRequest: null,
