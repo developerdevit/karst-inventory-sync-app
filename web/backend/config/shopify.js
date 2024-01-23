@@ -3,9 +3,14 @@ import { shopifyApp } from '@shopify/shopify-app-express';
 import { restResources } from '@shopify/shopify-api/rest/admin/2024-01';
 
 import { sessionStorage } from './redis.js';
-import { SCOPES, SHOPIFY_API_KEY, SHOPIFY_API_SECRET } from './vars/envs.js';
+import {
+  SCOPES,
+  SHOPIFY_API_KEY,
+  SHOPIFY_API_SECRET,
+  HOST,
+} from './vars/envs.js';
 
-console.log('SHOPIFY_API_KEY', SHOPIFY_API_KEY, SHOPIFY_API_SECRET);
+console.log('SHOPIFY_API_KEY', SHOPIFY_API_KEY, SHOPIFY_API_SECRET, HOST);
 
 const shopify = shopifyApp({
   api: {
@@ -15,7 +20,7 @@ const shopify = shopifyApp({
     apiKey: SHOPIFY_API_KEY,
     apiSecretKey: SHOPIFY_API_SECRET,
     scopes: SCOPES?.split(',') || ['read_products'],
-    hostName: process.env.HOST?.replace(/https?:\/\//, ''),
+    hostName: HOST?.replace(/https?:\/\//, ''),
     hostScheme: 'https',
   },
   auth: {
