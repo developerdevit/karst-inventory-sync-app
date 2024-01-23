@@ -98,4 +98,4 @@ app.use('/*', shopify.ensureInstalledOnShop(), async (_req, res, _next) => {
 
 app.use(errorHandler);
 
-app.listen(PORT);
+app.listen(PORT, () => console.log('SERVER IS RUNNING!', PORT));
