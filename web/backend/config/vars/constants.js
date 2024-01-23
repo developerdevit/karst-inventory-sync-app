@@ -28,3 +28,5 @@ export const STATIC_PATH =
   process.env.NODE_ENV === 'production'
     ? path.resolve(__dirname, '..', '..', '..', 'frontend/dist') //; `${process.cwd()}/frontend/dist`
     : path.resolve(__dirname, '..', '..', '..', 'frontend'); //`${process.cwd()}/frontend/`;
+
+console.log('STATIC_PATH', STATIC_PATH);
