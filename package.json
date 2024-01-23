@@ -18,10 +18,5 @@
     "dotenv": "^16.3.1"
   },
   "author": "gen",
-  "private": true,
-  "workspaces": [
-    "extensions/*",
-    "web/backend",
-    "web/frontend"
-  ]
+  "private": true
 }
