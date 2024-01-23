@@ -6,6 +6,9 @@ const HOST = process.env.HOST;
 
 const SCOPES = process.env.SCOPES;
 
+const SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY;
+const SHOPIFY_API_SECRET = process.env.SHOPIFY_SECRET;
+
 const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID;
 const SANITY_DATASET = process.env.SANITY_DATASET;
 const SANITY_API_TOKEN = process.env.SANITY_API_TOKEN;
@@ -32,4 +35,6 @@ export {
   REDIS_PORT,
   REDIS_PASSWORD,
   REDIS_USER,
+  SHOPIFY_API_KEY,
+  SHOPIFY_API_SECRET,
 };
