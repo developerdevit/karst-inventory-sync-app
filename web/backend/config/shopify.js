@@ -33,7 +33,8 @@ const shopify = shopifyApp({
     path: '/api/webhooks',
   },
   // This should be replaced with your preferred storage strategy
-  sessionStorage: new MemorySessionStorage(),
+  sessionStorage,
+  // sessionStorage: new MemorySessionStorage(),
 });
 
 export default shopify;

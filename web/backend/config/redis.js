@@ -7,6 +7,7 @@ import {
   REDIS_PASSWORD,
   REDIS_PORT,
   REDIS_USER,
+  REDIS_URL,
 } from './vars/envs.js';
 import { workerUpdateCallback } from '../worker/worker.js';
 import logger from './logger.js';
@@ -14,16 +15,17 @@ import logger from './logger.js';
 const { Worker, Queue, RedisConnection } = pkg;
 
 let redisClient, connection, sessionStorage;
+// const REDIS_URL = ;
 
 try {
-  redisClient = new Redis(REDIS_PORT, REDIS_HOST, {
-    maxRetriesPerRequest: null,
-    password: REDIS_PASSWORD,
-  });
+  redisClient = new Redis(REDIS_URL);
 
-  sessionStorage = new RedisSessionStorage(
-    `redis://${REDIS_USER}:${REDIS_PASSWORD}@${REDIS_HOST}/0`
-  );
+  // REDIS_PORT, REDIS_HOST, {
+  //   maxRetriesPerRequest: null,
+  //   password: REDIS_PASSWORD,
+  // }
+
+  sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
 
   connection = new RedisConnection(redisClient);
 } catch (error) {

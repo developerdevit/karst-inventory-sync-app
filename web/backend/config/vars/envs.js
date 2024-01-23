@@ -20,6 +20,7 @@ const REDIS_HOST = process.env.REDIS_HOST ?? 'localhost';
 const REDIS_PORT = process.env.REDIS_PORT ?? 6379;
 const REDIS_PASSWORD = process.env.REDIS_PASSWORD ?? 'admin';
 const REDIS_USER = process.env.REDIS_USER ?? 'default';
+const REDIS_URL = process.env.REDIS_URL;
 
 export {
   HOST,
@@ -37,4 +38,5 @@ export {
   REDIS_USER,
   SHOPIFY_API_KEY,
   SHOPIFY_API_SECRET,
+  REDIS_URL,
 };
