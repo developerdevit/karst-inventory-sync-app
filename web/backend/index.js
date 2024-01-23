@@ -90,6 +90,7 @@ app.use(shopify.cspHeaders());
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
 app.use('/*', shopify.ensureInstalledOnShop(), async (_req, res, _next) => {
+  console.log('HERE ensureInstalledOnShop');
   return res
     .status(200)
     .set('Content-Type', 'text/html')
