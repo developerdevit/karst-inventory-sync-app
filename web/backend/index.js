@@ -1,4 +1,4 @@
-import { join } from 'path';
+import path from 'path';
 import { readFileSync } from 'fs';
 import express from 'express';
 import serveStatic from 'serve-static';
@@ -6,12 +6,14 @@ import serveStatic from 'serve-static';
 import shopify from './config/shopify.js';
 import { webhookHandlers } from './webhooks/index.js';
 import { PORT } from './config/vars/envs.js';
-import { STATIC_PATH } from './config/vars/constants.js';
+import { STATIC_PATH, __dirname } from './config/vars/constants.js';
 import { initialSyncScript } from './script/initialSyncScript.js';
-import sanityService from './services/sanity.service.js';
 import { redisClient } from './config/redis.js';
 import { errorHandler } from './middlewares/errorHandler.js';
-import { getRedisDbReadableInfo } from './utils/getRedisDbReadableInfo.js';
+import {
+  getListOfErrorLogsFiles,
+  getRedisDbReadableInfo,
+} from './utils/getRedisDbReadableInfo.js';
 
 const app = express();
 
@@ -54,20 +56,34 @@ app.post('/api/run-sync-script', async (_req, res) => {
   res.status(200).send({ success: true, data: result });
 });
 
-// REMOVE
-// TEST ENDPOINT
-app.get('/api/test', async (_req, res) => {
-  res.status(200).send({ success: true, message: 'Hello', data: {} });
-});
-
 app.get('/api/info', async (_req, res) => {
-  const result = await getRedisDbReadableInfo(redisClient);
+  const info = await getRedisDbReadableInfo(redisClient);
+  const files = await getListOfErrorLogsFiles();
 
-  if (!result) {
+  if (!info && !files) {
     res.status(404).send({ success: false, data: null });
   }
 
-  res.status(200).send({ success: true, data: result });
+  res.status(200).send({ success: true, data: { info, files } });
+});
+
+// TODO: add middleware to validate filename
+app.get('/api/download-logs', (req, res) => {
+  if (req?.query?.fileName && req?.query?.fileName?.includes('.log')) {
+    const errorDirectoryPath = path.resolve(__dirname, '..', '..', 'logs');
+    const filePath = path.join(errorDirectoryPath, '/' + req?.query?.fileName);
+
+    return res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error('Error sending file:', err);
+        res.status(500).send('Internal Server Error');
+      }
+    });
+  }
+
+  res
+    .status(404)
+    .send({ success: false, data: null, message: 'File not found' });
 });
 
 app.use(shopify.cspHeaders());
@@ -77,7 +93,7 @@ app.use('/*', shopify.ensureInstalledOnShop(), async (_req, res, _next) => {
   return res
     .status(200)
     .set('Content-Type', 'text/html')
-    .send(readFileSync(join(STATIC_PATH, 'index.html')));
+    .send(readFileSync(path.join(STATIC_PATH, 'index.html')));
 });
 
 app.use(errorHandler);

@@ -1,46 +1,23 @@
-import {
-  Card,
-  Page,
-  Layout,
-  Image,
-  BlockStack,
-  Link,
-  Text,
-} from '@shopify/polaris';
+import { useState } from 'react';
+import { Card, Page, Layout, BlockStack, Text } from '@shopify/polaris';
 import { TitleBar } from '@shopify/app-bridge-react';
 
-import { useState } from 'react';
+import LogFilesList from '../components/LogFilesList';
+import Loader from '../components/Loader';
 import { useAuthenticatedFetch } from '../hooks';
+import { prepareInfoData } from '../utils/prepareInfoData';
 
 export default function InfoPage() {
   const [loading, setLoading] = useState(false);
+  const [fileLoading, setFileLoading] = useState([]);
   const [data, setData] = useState(null);
 
   const fetch = useAuthenticatedFetch();
 
-  const handleRunScript = () => {
+  const fetchInfo = () => {
     try {
-      console.log('handleRunScript');
-
       setLoading(true);
-
-      fetch('/api/run-sync-script', {
-        method: 'POST',
-        body: JSON.stringify({ test: true }),
-      })
-        .then((res) => res.json())
-        .then((res) => setData(res))
-        .finally(() => setLoading(false));
-    } catch (error) {
-      console.log('handleRunScript error: ', error);
-    }
-  };
-
-  const fetchTest = () => {
-    try {
-      console.log('info');
-
-      // setLoading(true);
+      setData(null);
 
       fetch('/api/info', {
         method: 'GET',
@@ -50,10 +27,45 @@ export default function InfoPage() {
           if (res?.success && res?.data) {
             setData(res?.data);
           }
-        });
-      // .finally(() => setLoading(false));
+
+          if (res?.data?.files && Array.isArray(res?.data?.files)) {
+            setFileLoading(
+              res?.data?.files
+                ?.filter((file) => file?.includes('.log'))
+                .map((_) => false)
+            );
+          }
+        })
+        .finally(() => setLoading(false));
     } catch (error) {
-      console.log('info error: ', error);
+      console.log('fetchInfo error: ', error);
+    }
+  };
+
+  const fetchDownloadFile = (fileName, idx) => {
+    try {
+      setFileLoading((cur) =>
+        cur.map((_, index) => (index === idx ? true : false))
+      );
+      fetch(`/api/download-logs?fileName=${fileName}`, {
+        method: 'GET',
+        headers: {
+          Accept: 'text/plain',
+        },
+      })
+        .then((res) => res.blob())
+        .then((blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        })
+        .finally(() => setFileLoading((cur) => cur.map(() => false)));
+    } catch (error) {
+      console.log('fetchDownloadFile error: ', error);
     }
   };
 
@@ -61,17 +73,12 @@ export default function InfoPage() {
     <Page narrowWidth>
       <TitleBar
         title={'Inventory Sync App'}
-        // primaryAction={{
-        //   content: 'Run sync script',
-        //   destructive: false,
-        //   onAction: handleRunScript,
-        //   loading: loading,
-        // }}
         secondaryActions={[
           {
             content: 'Fetch info',
             destructive: false,
-            onAction: fetchTest,
+            onAction: fetchInfo,
+            loading: loading,
           },
         ]}
       />
@@ -82,7 +89,35 @@ export default function InfoPage() {
               <Text as='h2' variant='headingLg'>
                 Info
               </Text>
-              {data && <code>{data}</code>}
+              <Loader loading={loading} />
+              {data && (
+                <>
+                  <div style={{ marginTop: '1rem' }}>
+                    <Text as='h2' variant='headingMd'>
+                      Redis storage status:
+                    </Text>
+                    <div style={{ marginTop: '0.25rem' }}>
+                      {prepareInfoData(data?.info)}
+                    </div>
+                  </div>
+                  {data?.files && Array.isArray(data?.files) && (
+                    <div style={{ marginTop: '1rem' }}>
+                      <Text as='h2' variant='headingMd'>
+                        Logs files:
+                      </Text>
+
+                      <LogFilesList
+                        data={data}
+                        fileLoading={fileLoading}
+                        fetchDownloadFile={fetchDownloadFile}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+              {!data && !loading && (
+                <p style={{ marginTop: '0.5rem' }}>No data fetched...</p>
+              )}
             </BlockStack>
           </Card>
         </Layout.Section>

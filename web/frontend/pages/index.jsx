@@ -38,35 +38,9 @@ export default function HomePage() {
     }
   };
 
-  const fetchTest = () => {
-    try {
-      fetch('/api/add-job', {
-        method: 'POST',
-        body: JSON.stringify({ id: '123123', name: 'test123' }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => console.log('test res', JSON.stringify(res, null, 2)));
-      // .finally(() => setLoading(false));
-    } catch (error) {
-      console.log('test error: ', error);
-    }
-  };
-
   return (
     <Page narrowWidth>
-      <TitleBar
-        title={'Inventory Sync App'}
-        // secondaryActions={[
-        //   {
-        //     content: 'Fetch test',
-        //     destructive: false,
-        //     onAction: fetchTest,
-        //   },
-        // ]}
-      />
+      <TitleBar title={'Inventory Sync App'} />
       <Layout>
         <Layout.Section>
           <Card>
