@@ -5,6 +5,8 @@ import { restResources } from '@shopify/shopify-api/rest/admin/2024-01';
 import { sessionStorage } from './redis.js';
 import { SCOPES, SHOPIFY_API_KEY, SHOPIFY_API_SECRET } from './vars/envs.js';
 
+console.log('SHOPIFY_API_KEY', SHOPIFY_API_KEY, SHOPIFY_API_SECRET);
+
 const shopify = shopifyApp({
   api: {
     apiVersion: LATEST_API_VERSION,
