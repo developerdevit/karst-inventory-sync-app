@@ -2,6 +2,8 @@ import { LATEST_API_VERSION } from '@shopify/shopify-api';
 import { shopifyApp } from '@shopify/shopify-app-express';
 import { restResources } from '@shopify/shopify-api/rest/admin/2024-01';
 
+import { MemorySessionStorage } from '@shopify/shopify-app-session-storage-memory';
+
 import { sessionStorage } from './redis.js';
 import {
   SCOPES,
@@ -31,7 +33,7 @@ const shopify = shopifyApp({
     path: '/api/webhooks',
   },
   // This should be replaced with your preferred storage strategy
-  sessionStorage,
+  sessionStorage: new MemorySessionStorage(),
 });
 
 export default shopify;
