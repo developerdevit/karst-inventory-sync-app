@@ -15,17 +15,11 @@ import logger from './logger.js';
 const { Worker, Queue, RedisConnection } = pkg;
 
 let redisClient, connection, sessionStorage;
-// const REDIS_URL = ;
 
 try {
   redisClient = new Redis(REDIS_URL, {
     maxRetriesPerRequest: null,
   });
-
-  // REDIS_PORT, REDIS_HOST, {
-  //   maxRetriesPerRequest: null,
-  //   password: REDIS_PASSWORD,
-  // }
 
   sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
 

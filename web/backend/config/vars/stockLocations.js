@@ -1,15 +1,15 @@
-// TODO: ask about Brazil - not present on website
+// HARD-CODED LOCATIONS
 
 const stockLocations = [
   {
     id: 1,
-    name: 'ShipBob Moreno Valley and ShipBob',
+    name: 'ShipBob - Marino Valley',
     code: 'US',
     stockCoverage: ['US', 'CA', 'MX', 'BR'],
   },
   {
     id: 2,
-    name: 'Service Logistics and Janssen Service',
+    name: 'Service Logistics',
     code: 'EU',
     stockCoverage: [
       'AT',

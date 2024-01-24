@@ -261,9 +261,19 @@ class SanityService {
       const result = [];
 
       for (let i = 0; i < locationsArr?.length; i += 1) {
+        const curLocationName = locationsArr?.[i]?.name;
+
+        console.log('curLocationName', curLocationName);
+
+        const searchedLocation = stockLocations.find((loc) =>
+          curLocationName?.toLowerCase()?.includes(loc.name.toLowerCase())
+        );
+
+        console.log('searchedLocation', searchedLocation);
+
         const res = await sanityClient.create({
           ...locationsArr?.[i],
-          stockCoverage: stockLocations?.[i]?.stockCoverage ?? [],
+          stockCoverage: searchedLocation?.stockCoverage ?? [],
           _type: 'location',
         });
 
