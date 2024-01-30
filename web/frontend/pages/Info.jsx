@@ -27,18 +27,30 @@ export default function InfoPage() {
           if (res?.success && res?.data) {
             setData(res?.data);
           }
-
-          if (res?.data?.files && Array.isArray(res?.data?.files)) {
-            setFileLoading(
-              res?.data?.files
-                ?.filter((file) => file?.includes('.log'))
-                .map((_) => false)
-            );
-          }
         })
         .finally(() => setLoading(false));
     } catch (error) {
       console.log('fetchInfo error: ', error);
+    }
+  };
+
+  const fetchTest = () => {
+    try {
+      setLoading(true);
+      // setData(null);
+
+      fetch('/api/test', {
+        method: 'GET',
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res?.success && res?.data) {
+            // setData(res?.data);
+          }
+        })
+        .finally(() => setLoading(false));
+    } catch (error) {
+      console.log('fetchTest error: ', error);
     }
   };
 
@@ -78,6 +90,12 @@ export default function InfoPage() {
             content: 'Fetch info',
             destructive: false,
             onAction: fetchInfo,
+            loading: loading,
+          },
+          {
+            content: 'Fetch test',
+            destructive: false,
+            onAction: fetchTest,
             loading: loading,
           },
         ]}

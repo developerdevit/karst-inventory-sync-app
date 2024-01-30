@@ -14,6 +14,7 @@ import {
   getListOfErrorLogsFiles,
   getRedisDbReadableInfo,
 } from './utils/getRedisDbReadableInfo.js';
+import shopifyService from './services/shopify.service.js';
 
 const app = express();
 
@@ -65,6 +66,18 @@ app.get('/api/info', async (_req, res) => {
   }
 
   res.status(200).send({ success: true, data: { info, files } });
+});
+
+app.get('/api/test', async (_req, res) => {
+  const session = res.locals.shopify.session;
+
+  const data = await shopifyService.getFulfillmentServices({ session });
+
+  if (!data) {
+    res.status(404).send({ success: false, data: null });
+  }
+
+  res.status(200).send({ success: true, data });
 });
 
 // TODO: add middleware to validate filename

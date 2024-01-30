@@ -5,8 +5,8 @@ const __filename = fileURLToPath(import.meta.url);
 
 export const __dirname = path.dirname(__filename);
 
-export const DEFAULT_FETCH_DELAY = 1000; // in ms
-export const MAX_RETRY_AMOUNT = 100; // MAX_RETRY_AMOUNT * DEFAULT_FETCH_DELAY = max time to wait for response
+export const DEFAULT_FETCH_DELAY = 3000; // in ms
+export const MAX_RETRY_AMOUNT = 200; // MAX_RETRY_AMOUNT * DEFAULT_FETCH_DELAY = max time to wait for response
 
 export const QUEUE_SETTINGS = {
   removeOnComplete: true,

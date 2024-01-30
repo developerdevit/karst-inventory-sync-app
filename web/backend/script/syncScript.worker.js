@@ -50,7 +50,11 @@ try {
   });
 
   await deleteFileIfExist(filePath);
-  await sanityService.init_deleteLocations();
+  // DO NOT DELETE LOCATIONS EVERYTIME
+  // FETCH FULLFILLMENT SERVICES
+  // PUSH fullfillment services to Sanity
+
+  // await sanityService.init_deleteLocations();
 
   const createdBulkOperationId = await createBulkOperation(client);
 

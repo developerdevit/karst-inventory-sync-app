@@ -4,11 +4,15 @@ import {
   GET_INVENTORY_ITEM_WITH_LEVELS_BY_ID,
 } from '../graphql/queries/intentoryItems.graphql.js';
 
+// TODO:
+// check if can receive location with FULLFILLMENT
+// https://shop.karstgoods.com/admin/api/2024-01/fulfillment_services.json?scope=all
+
 class ShopifyService {
   async getInventoryItemWithLevelsById({
     session,
     inventory_item_id,
-    locations_count,
+    locations_count, // SET 10 - 20
   }) {
     try {
       const client = new shopify.api.clients.Graphql({ session });
@@ -63,6 +67,31 @@ class ShopifyService {
         'shopifyService.getProductVariantByInventoryItemId error: ',
         error
       );
+      return null;
+    }
+  }
+
+  async getFulfillmentServices({ session }) {
+    try {
+      const client = new shopify.api.clients.Rest({
+        session,
+        apiVersion: '2024-01',
+      });
+
+      const res = await client.get({ path: 'fulfillment_services' });
+
+      console.log(
+        'getFulfillmentServices res:\n',
+        JSON.stringify(res, null, 2)
+      );
+
+      // const productVariantId = res?.body?.data?.inventoryItem?.variant?.id;
+      // const nodes = res?.body?.data?.inventoryItem?.inventoryLevels?.nodes;
+
+      return [];
+      // return { productVariantId, nodes };
+    } catch (error) {
+      console.log('shopifyService.getFulfillmentServices error: ', error);
       return null;
     }
   }
