@@ -96,20 +96,6 @@ export default function InfoPage() {
             onAction: fetchInfo,
             loading: loading,
           },
-          // TODO: remove
-          {
-            content: 'Fetch test',
-            destructive: false,
-            onAction: fetchTest,
-            loading: loading,
-          },
-          // TODO: remove
-          {
-            content: 'Remove old locations',
-            destructive: true,
-            onAction: fetchRemoveLocations,
-            loading: loading,
-          },
         ]}
       />
       <Layout>
