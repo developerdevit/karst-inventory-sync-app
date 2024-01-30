@@ -314,12 +314,26 @@ class SanityService {
   async init_deleteOldLocations() {
     try {
       const res = await sanityClient.delete({
-        query: `*[_type == 'location' && dateTime(_createdAt) < dateTime('2024-01-28T20:43:31Z')]`,
+        query: `*[_type == 'location' && dateTime(_createdAt) > dateTime('2024-01-27T20:43:31Z')]`,
       });
 
       return res;
     } catch (error) {
       console.log('sanityService.init_deleteOldLocations error: ', error);
+      return [];
+    }
+  }
+
+  // TODO: REMOVE or fix (hard-coded ids)
+  async init_deleteLocationsByIds() {
+    try {
+      const res = await sanityClient.delete({
+        query: `*[_type == 'location' && _id in ["r8QI4XsJMHUG6h19Hf7zcK", "r8QI4XsJMHUG6h19Hf7zPz", "r8QI4XsJMHUG6h19Hf7zDe"]]`,
+      });
+
+      return res;
+    } catch (error) {
+      console.log('sanityService.init_deleteLocationsByIds error: ', error);
       return [];
     }
   }
