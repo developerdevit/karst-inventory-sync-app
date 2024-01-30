@@ -37,20 +37,24 @@ export default function InfoPage() {
   const fetchTest = () => {
     try {
       setLoading(true);
-      // setData(null);
 
       fetch('/api/test', {
         method: 'GET',
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          if (res?.success && res?.data) {
-            // setData(res?.data);
-          }
-        })
-        .finally(() => setLoading(false));
+      }).finally(() => setLoading(false));
     } catch (error) {
       console.log('fetchTest error: ', error);
+    }
+  };
+
+  const fetchRemoveLocations = () => {
+    try {
+      setLoading(true);
+
+      fetch('/api/remove-old-locations', {
+        method: 'DELETE',
+      }).finally(() => setLoading(false));
+    } catch (error) {
+      console.log('fetchRemoveLocations error: ', error);
     }
   };
 
@@ -92,10 +96,18 @@ export default function InfoPage() {
             onAction: fetchInfo,
             loading: loading,
           },
+          // TODO: remove
           {
             content: 'Fetch test',
             destructive: false,
             onAction: fetchTest,
+            loading: loading,
+          },
+          // TODO: remove
+          {
+            content: 'Remove old locations',
+            destructive: true,
+            onAction: fetchRemoveLocations,
             loading: loading,
           },
         ]}

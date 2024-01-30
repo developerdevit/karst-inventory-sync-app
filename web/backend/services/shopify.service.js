@@ -3,6 +3,7 @@ import {
   GET_INVENTORY_ITEM_BY_ID,
   GET_INVENTORY_ITEM_WITH_LEVELS_BY_ID,
 } from '../graphql/queries/intentoryItems.graphql.js';
+import { prepareFulFillmentServices } from '../utils/prepareFulFillmentServices.js';
 
 // TODO:
 // check if can receive location with FULLFILLMENT
@@ -82,17 +83,11 @@ class ShopifyService {
         path: 'fulfillment_services',
         query: { scope: 'all' },
       });
+      const data = prepareFulFillmentServices(res);
 
-      console.log(
-        'getFulfillmentServices res:\n',
-        JSON.stringify(res, null, 2)
-      );
+      console.log('getFulfillmentServices data', data);
 
-      // const productVariantId = res?.body?.data?.inventoryItem?.variant?.id;
-      // const nodes = res?.body?.data?.inventoryItem?.inventoryLevels?.nodes;
-
-      return [];
-      // return { productVariantId, nodes };
+      return data;
     } catch (error) {
       console.log('shopifyService.getFulfillmentServices error: ', error);
       return null;

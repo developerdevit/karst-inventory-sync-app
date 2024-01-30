@@ -15,6 +15,7 @@ import {
   getRedisDbReadableInfo,
 } from './utils/getRedisDbReadableInfo.js';
 import shopifyService from './services/shopify.service.js';
+import sanityService from './services/sanity.service.js';
 
 const app = express();
 
@@ -73,11 +74,29 @@ app.get('/api/test', async (_req, res) => {
 
   const data = await shopifyService.getFulfillmentServices({ session });
 
-  if (!data) {
+  const result =
+    data?.length > 0 ? await sanityService.init_createLocations(data) : [];
+
+  console.log('sanityService.init_createLocations', result);
+
+  if (!result) {
     res.status(404).send({ success: false, data: null });
   }
 
-  res.status(200).send({ success: true, data });
+  res.status(200).send({ success: true, data: result });
+});
+
+// TODO: remove
+app.delete('/api/remove-old-locations', async (_req, res) => {
+  const result = await sanityService.init_deleteOldLocations();
+
+  console.log('sanityService.init_deleteOldLocations', result);
+
+  if (!result) {
+    res.status(404).send({ success: false, data: null });
+  }
+
+  res.status(200).send({ success: true, data: result });
 });
 
 // TODO: add middleware to validate filename

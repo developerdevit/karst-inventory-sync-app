@@ -238,9 +238,6 @@ class SanityService {
     try {
       const res = await sanityClient
         .patch(_id)
-        .setIfMissing({
-          locations: [],
-        })
         .set({
           locations: [],
         })
@@ -295,6 +292,8 @@ class SanityService {
         _id
       }`);
 
+      console.log('init_deleteLocations variants', variants);
+
       for (const variant of variants) {
         if (variant?._id) {
           await this.init_deleteSingleVariantLocations(variant?._id);
@@ -308,6 +307,19 @@ class SanityService {
       return res;
     } catch (error) {
       console.log('sanityService.init_deleteLocations error: ', error);
+      return [];
+    }
+  }
+
+  async init_deleteOldLocations() {
+    try {
+      const res = await sanityClient.delete({
+        query: `*[_type == 'location' && dateTime(_createdAt) < dateTime('2024-01-28T20:43:31Z')]`,
+      });
+
+      return res;
+    } catch (error) {
+      console.log('sanityService.init_deleteOldLocations error: ', error);
       return [];
     }
   }
