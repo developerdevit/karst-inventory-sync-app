@@ -78,7 +78,10 @@ class ShopifyService {
         apiVersion: '2024-01',
       });
 
-      const res = await client.get({ path: 'fulfillment_services' });
+      const res = await client.get({
+        path: 'fulfillment_services',
+        query: { scope: 'all' },
+      });
 
       console.log(
         'getFulfillmentServices res:\n',
