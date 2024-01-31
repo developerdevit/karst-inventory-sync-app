@@ -13,7 +13,8 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import {
   getListOfErrorLogsFiles,
   getRedisDbReadableInfo,
-} from './utils/getRedisDbReadableInfo.js';
+  getVPSStateData,
+} from './utils/getReadableInfo.js';
 import shopifyService from './services/shopify.service.js';
 import sanityService from './services/sanity.service.js';
 
@@ -59,14 +60,17 @@ app.post('/api/run-sync-script', async (_req, res) => {
 });
 
 app.get('/api/info', async (_req, res) => {
-  const info = await getRedisDbReadableInfo(redisClient);
+  const redisInfo = await getRedisDbReadableInfo(redisClient);
   const files = await getListOfErrorLogsFiles();
+  const serverState = await getVPSStateData();
 
-  if (!info && !files) {
+  if (!redisInfo && !files) {
     res.status(404).send({ success: false, data: null });
   }
 
-  res.status(200).send({ success: true, data: { info, files } });
+  res
+    .status(200)
+    .send({ success: true, data: { info: redisInfo, files, serverState } });
 });
 
 app.get('/api/test', async (_req, res) => {

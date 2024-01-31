@@ -110,6 +110,14 @@ export default function InfoPage() {
                 <>
                   <div style={{ marginTop: '1rem' }}>
                     <Text as='h2' variant='headingMd'>
+                      VPS instance status:
+                    </Text>
+                    <div style={{ marginTop: '0.25rem' }}>
+                      {prepareInfoData(data?.serverStatus)}
+                    </div>
+                  </div>
+                  <div style={{ marginTop: '1rem' }}>
+                    <Text as='h2' variant='headingMd'>
                       Redis storage status:
                     </Text>
                     <div style={{ marginTop: '0.25rem' }}>
