@@ -174,16 +174,14 @@ try {
     '\n========================= INIT SCRIPT END ================================\n'
   );
 
-  console.log('data?.locationsArr: ', JSON.stringify(data?.locationsArr));
-
-  console.log('\n=========================================================\n');
-
-  console.log('sanityLocations: ', JSON.stringify(sanityLocationsData?.[0]));
-
   parentPort.postMessage({
     data: {
       variantsWithLocations: updatedVariantsWithLocations,
-      locationsArr: data?.locationsArr,
+      locationsArr: sanityLocationsData?.map((item) => ({
+        id: item?.id,
+        name: item?.name,
+        countryCode: item?.countryCode,
+      })),
     },
   });
 } catch (error) {

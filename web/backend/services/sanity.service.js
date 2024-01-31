@@ -220,7 +220,7 @@ class SanityService {
         .setIfMissing({
           inventoryItemId,
         })
-        .set('locations', [])
+        .set({ locations: [] })
         .append('locations', locations)
         .commit({ autoGenerateArrayKeys: true });
 
