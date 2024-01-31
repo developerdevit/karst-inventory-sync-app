@@ -108,14 +108,16 @@ export default function InfoPage() {
               <Loader loading={loading} />
               {data && (
                 <>
-                  <div style={{ marginTop: '1rem' }}>
-                    <Text as='h2' variant='headingMd'>
-                      VPS instance status:
-                    </Text>
-                    <div style={{ marginTop: '0.25rem' }}>
-                      {prepareInfoData(data?.serverStatus)}
+                  {data?.serverState && (
+                    <div style={{ marginTop: '1rem' }}>
+                      <Text as='h2' variant='headingMd'>
+                        VPS instance status:
+                      </Text>
+                      <div style={{ marginTop: '0.25rem' }}>
+                        {prepareInfoData(data?.serverState)}
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <div style={{ marginTop: '1rem' }}>
                     <Text as='h2' variant='headingMd'>
                       Redis storage status:
