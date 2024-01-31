@@ -253,8 +253,10 @@ class SanityService {
     }
   }
 
-  async init_createLocations(locationsArr) {
+  async init_createLocations(locationsArr, isFulfillmentService = false) {
     try {
+      const currentSanityLocations = await this.getLocations();
+
       const result = [];
 
       for (let i = 0; i < locationsArr?.length; i += 1) {
@@ -262,17 +264,38 @@ class SanityService {
 
         console.log('curLocationName', curLocationName);
 
+        const searchedSanityLocation = currentSanityLocations?.find((item) =>
+          curLocationName?.toLowerCase()?.includes(item?.name?.toLowerCase())
+        );
+
+        if (searchedSanityLocation) {
+          console.info(
+            `Dataset already has location with name "${curLocationName}"`
+          );
+          continue;
+        }
+
         const searchedLocation = stockLocations.find((loc) =>
           curLocationName?.toLowerCase()?.includes(loc.name.toLowerCase())
         );
 
         console.log('searchedLocation', searchedLocation);
 
-        const res = await sanityClient.create({
-          ...locationsArr?.[i],
-          stockCoverage: searchedLocation?.stockCoverage ?? [],
-          _type: 'location',
-        });
+        const res = await sanityClient.create(
+          isFulfillmentService
+            ? {
+                id: locationsArr?.[i]?.location_id,
+                countryCode: locationsArr?.[i]?.countryCode,
+                name: locationsArr?.[i]?.name,
+                stockCoverage: searchedLocation?.stockCoverage ?? [],
+                _type: 'location',
+              }
+            : {
+                ...locationsArr?.[i],
+                stockCoverage: searchedLocation?.stockCoverage ?? [],
+                _type: 'location',
+              }
+        );
 
         if (res) {
           result.push(res);

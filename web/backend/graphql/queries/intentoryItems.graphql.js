@@ -28,4 +28,33 @@ query($id: ID!) {
 }
 `;
 
-export { GET_INVENTORY_ITEM_WITH_LEVELS_BY_ID, GET_INVENTORY_ITEM_BY_ID };
+const GET_INVENTORY_LEVELS_BY_FULFILLMENT_SERVICE_ID = `
+query($id: ID!, $names: [String!]!) {
+	fulfillmentService(id: $id) {
+    location {
+      id,
+      inventoryLevels(first:250) {
+        edges {
+          node {
+            item {
+              id,
+              variant {
+                id,
+              }
+            }
+            quantities(names: $names) {
+              quantity,
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+export {
+  GET_INVENTORY_ITEM_WITH_LEVELS_BY_ID,
+  GET_INVENTORY_ITEM_BY_ID,
+  GET_INVENTORY_LEVELS_BY_FULFILLMENT_SERVICE_ID,
+};

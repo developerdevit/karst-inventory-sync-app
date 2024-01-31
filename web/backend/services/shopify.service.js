@@ -2,6 +2,7 @@ import shopify from '../config/shopify.js';
 import {
   GET_INVENTORY_ITEM_BY_ID,
   GET_INVENTORY_ITEM_WITH_LEVELS_BY_ID,
+  GET_INVENTORY_LEVELS_BY_FULFILLMENT_SERVICE_ID,
 } from '../graphql/queries/intentoryItems.graphql.js';
 import { prepareFulFillmentServices } from '../utils/prepareFulFillmentServices.js';
 
@@ -90,6 +91,37 @@ class ShopifyService {
       return data;
     } catch (error) {
       console.log('shopifyService.getFulfillmentServices error: ', error);
+      return null;
+    }
+  }
+
+  async getInventoryLevelsByFulFillmentServiceId({
+    session,
+    fulfillment_service_id,
+  }) {
+    try {
+      const client = new shopify.api.clients.Graphql({ session });
+
+      const res = await client.query({
+        data: {
+          query: GET_INVENTORY_LEVELS_BY_FULFILLMENT_SERVICE_ID,
+          variables: {
+            id: fulfillment_service_id,
+            names: ['available'],
+          },
+        },
+      });
+
+      const location_id = res?.body?.data?.fulfillmentService?.location?.id;
+      const nodes =
+        res?.body?.data?.fulfillmentService?.location?.inventoryLevels?.edges;
+
+      return { location_id, nodes };
+    } catch (error) {
+      console.log(
+        'shopifyService.getInventoryLevelsByFulFillmentServiceId error: ',
+        error
+      );
       return null;
     }
   }

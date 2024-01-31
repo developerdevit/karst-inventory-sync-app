@@ -75,7 +75,9 @@ app.get('/api/test', async (_req, res) => {
   const data = await shopifyService.getFulfillmentServices({ session });
 
   const result =
-    data?.length > 0 ? await sanityService.init_createLocations(data) : [];
+    data?.length > 0
+      ? await sanityService.init_createLocations(data, true)
+      : [];
 
   console.log('sanityService.init_createLocations', result);
 

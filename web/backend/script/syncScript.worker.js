@@ -17,6 +17,11 @@ import {
   DEFAULT_FETCH_DELAY,
   MAX_RETRY_AMOUNT,
 } from '../config/vars/constants.js';
+import shopifyService from '../services/shopify.service.js';
+import {
+  prepareSingleFulfillmentServiceData,
+  updateVariantsByFulFillmentServicesData,
+} from '../utils/prepareFulFillmentServices.js';
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -88,43 +93,81 @@ try {
   }
 
   const data = loadingResult ? await getDataFromFile(filePath) : null;
+  const fulfillmentServicesArr = await shopifyService.getFulfillmentServices({
+    session,
+  });
 
-  if (data) {
-    const locationsResult =
-      data?.locationsArr?.length > 0
-        ? await sanityService.init_createLocations(data?.locationsArr)
-        : null;
+  const fulfillmentServicesDataArr = [];
 
-    if (!locationsResult) {
-      console.warn('Locations not created');
-      parentPort.postMessage({ data: null });
-      // return;
-    }
+  for (let i = 0; i < fulfillmentServicesArr?.length; i += 1) {
+    const singleFulfillment =
+      await shopifyService.getInventoryLevelsByFulFillmentServiceId({
+        session,
+        fulfillment_service_id: `gid://shopify/FulfillmentService/${fulfillmentServicesArr?.[i]?.id}`,
+      });
 
-    const sanityLocationsData = await sanityService.getLocations();
+    if (singleFulfillment) {
+      const preparedDataArr =
+        prepareSingleFulfillmentServiceData(singleFulfillment);
 
-    const preparedSanityVariantsArr = mapSanityVariants(
-      data?.variantsWithLocations,
-      sanityLocationsData
-    );
-
-    for (const item of preparedSanityVariantsArr) {
-      await sanityService.init_updateSingleVariantWithLocations(
-        item?.variantId,
-        item?.inventoryItemId,
-        item?.locations
-      );
+      Array.isArray(preparedDataArr) &&
+        fulfillmentServicesDataArr.push(...preparedDataArr);
     }
   }
 
   console.log(
-    'locationsWithVariants',
-    JSON.stringify(data?.variantsWithLocations?.[0], null, 2)
+    'fulfillmentServicesDataArr?.[0]\n',
+    JSON.stringify(fulfillmentServicesDataArr?.[0], null, 2)
   );
 
-  console.log('\n=========================================================\n');
+  if (data) {
+    const locationsResult = await sanityService.init_createLocations(
+      data?.locationsArr
+    );
+    const fulfillmentServicesLocationsResult =
+      await sanityService.init_createLocations(fulfillmentServicesArr, true);
 
-  console.log('locations', JSON.stringify(data?.locationsArr, null, 2));
+    if (!locationsResult) {
+      console.warn('Locations not created');
+    }
+
+    if (!fulfillmentServicesLocationsResult) {
+      console.warn('Locations by fulfillmentServices not created');
+    }
+
+    const sanityLocationsData = await sanityService.getLocations();
+
+    const updatedVariantsWithLocations =
+      updateVariantsByFulFillmentServicesData(
+        data?.variantsWithLocations,
+        fulfillmentServicesDataArr
+      );
+
+    console.log(
+      'updatedVariantsWithLocations?.[0]\n',
+      JSON.stringify(updatedVariantsWithLocations?.[0], null, 2)
+    );
+
+    const preparedSanityVariantsArr = mapSanityVariants(
+      updatedVariantsWithLocations,
+      sanityLocationsData
+    );
+
+    console.log(
+      'preparedSanityVariantsArr?.[0]\n',
+      JSON.stringify(preparedSanityVariantsArr?.[0], null, 2)
+    );
+
+    // for (const item of preparedSanityVariantsArr) {
+    //   await sanityService.init_updateSingleVariantWithLocations(
+    //     item?.variantId,
+    //     item?.inventoryItemId,
+    //     item?.locations
+    //   );
+    // }
+  }
+
+  console.log('\n=========================================================\n');
 
   console.log(
     '\n========================= INIT SCRIPT END ================================\n'
