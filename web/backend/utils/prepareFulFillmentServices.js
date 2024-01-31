@@ -41,27 +41,49 @@ export function updateVariantsByFulFillmentServicesData(
   variantsWithLocations,
   fulfillmentServicesData
 ) {
-  return variantsWithLocations?.map((variant) => {
-    const searchedFulfillmentServiceVariant = fulfillmentServicesData?.find(
-      (item) => item?.variantId === variant?.variantId
-    );
-
-    if (searchedFulfillmentServiceVariant) {
-      const hasFulfillmentServiceLocation = variant?.locations?.some(
-        (location) =>
-          location?.id === searchedFulfillmentServiceVariant?.locationId
+  const preparedFulfillmentServicesData = fulfillmentServicesData?.reduce(
+    (acc, item) => {
+      const searchedVariantIdx = acc?.findIndex(
+        (cur) => cur?.variantId == item?.variantId
       );
 
-      if (!hasFulfillmentServiceLocation) {
-        variant?.locations?.push({
-          id: searchedFulfillmentServiceVariant?.locationId,
-          quantity: searchedFulfillmentServiceVariant?.quantity,
+      if (searchedVariantIdx !== -1) {
+        acc[searchedVariantIdx].locations.push({
+          id: item?.locationId,
+          quantity: item?.quantity,
+        });
+      } else {
+        acc.push({
+          variantId: item?.variantId,
+          locations: [{ id: item?.locationId, quantity: item?.quantity }],
         });
       }
-    } else {
-      console.log(
-        'NOT FOUND searchedFulfillmentServiceVariant: ',
-        variant?.variantId
+
+      return acc;
+    },
+    []
+  );
+
+  return variantsWithLocations?.map((variant) => {
+    const searchedFulfillmentServiceVariant =
+      preparedFulfillmentServicesData?.find(
+        (item) => item?.variantId === variant?.variantId
+      );
+
+    if (searchedFulfillmentServiceVariant) {
+      searchedFulfillmentServiceVariant?.locations?.forEach(
+        (searchedLocation) => {
+          if (
+            !variant?.locations?.some(
+              (variantLocation) => variantLocation?.id === searchedLocation?.id
+            )
+          ) {
+            variant?.locations.push({
+              id: searchedLocation?.id,
+              quantity: searchedLocation?.id,
+            });
+          }
+        }
       );
     }
 

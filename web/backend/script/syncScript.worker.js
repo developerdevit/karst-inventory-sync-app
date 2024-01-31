@@ -59,11 +59,11 @@ try {
   // FETCH FULLFILLMENT SERVICES
   // PUSH fullfillment services to Sanity
 
-  const deleteLocRes = await sanityService.init_deleteLocations();
+  // const deleteLocRes = await sanityService.init_deleteLocations();
 
-  if (deleteLocRes) {
-    console.log('deleteLocRes: ', JSON.stringify(deleteLocRes));
-  }
+  // if (deleteLocRes) {
+  //   console.log('deleteLocRes: ', JSON.stringify(deleteLocRes));
+  // }
 
   const createdBulkOperationId = await createBulkOperation(client);
 
