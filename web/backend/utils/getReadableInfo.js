@@ -93,7 +93,7 @@ function getCPULoad() {
         ? parseFloat(cpuIdleStr?.replace(',', '.'))
         : parseFloat(cpuIdleStr);
 
-      resolve(cpuIdle ? (100 - cpuIdle).toFixed(2) : '???');
+      resolve(cpuIdle ? (100 - cpuIdle).toFixed(2) + '%' : '???');
     });
   });
 }
@@ -103,7 +103,7 @@ export async function getVPSStateData() {
     const ram = await getUsedRAM();
     const cpu = await getCPULoad();
 
-    return { RAM: ram, CPU_load: cpu };
+    return JSON.stringify({ RAM: ram, CPU_load: cpu }, null, 2);
   } catch (error) {
     console.log(error);
     return null;
