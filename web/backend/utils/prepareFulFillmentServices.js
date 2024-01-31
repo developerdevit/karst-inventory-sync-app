@@ -7,7 +7,7 @@ export function prepareFulFillmentServices(res) {
       ?.filter((item) => item?.name !== 'test')
       ?.map((item) => ({
         name: item?.name,
-        id: item?.id,
+        id: item?.id?.toString(),
         location_id: item?.location_id?.toString(),
         countryCode: 'null',
       }));
@@ -20,8 +20,10 @@ export function prepareSingleFulfillmentServiceData(data) {
   const locationIdStr = data?.fulfillmentService?.location?.id;
   const nodes = data?.fulfillmentService?.location?.inventoryLevels?.edges;
 
+  console.log('locationIdStr', locationIdStr);
+
   const locationIdIdx = locationIdStr?.lastIndexOf('/');
-  const locationId = locationIdStr.slice(locationIdIdx + 1);
+  const locationId = locationIdStr?.slice(locationIdIdx + 1);
 
   const preparedVariantsWithLocation = nodes?.map((item) => {
     const variantIdStr = item?.node?.item?.variant?.id;

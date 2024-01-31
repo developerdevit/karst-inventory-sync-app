@@ -106,6 +106,11 @@ try {
         fulfillment_service_id: `gid://shopify/FulfillmentService/${fulfillmentServicesArr?.[i]?.id}`,
       });
 
+    console.log(
+      'singleFulfillment\n',
+      JSON.stringify(singleFulfillment, null, 2)
+    );
+
     if (singleFulfillment) {
       const preparedDataArr =
         prepareSingleFulfillmentServiceData(singleFulfillment);
