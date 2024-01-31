@@ -60,6 +60,11 @@ export function updateVariantsByFulFillmentServicesData(
           quantity: searchedFulfillmentServiceVariant?.quantity,
         });
       }
+    } else {
+      console.log(
+        'NOT FOUND searchedFulfillmentServiceVariant: ',
+        searchedFulfillmentServiceVariant
+      );
     }
 
     return variant;

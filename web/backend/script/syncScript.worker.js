@@ -131,14 +131,6 @@ try {
     const fulfillmentServicesLocationsResult =
       await sanityService.init_createLocations(fulfillmentServicesArr, true);
 
-    if (!locationsResult) {
-      console.warn('Locations not created');
-    }
-
-    if (!fulfillmentServicesLocationsResult) {
-      console.warn('Locations by fulfillmentServices not created');
-    }
-
     sanityLocationsData = await sanityService.getLocations();
 
     updatedVariantsWithLocations = updateVariantsByFulFillmentServicesData(
@@ -154,13 +146,6 @@ try {
     const preparedSanityVariantsArr = mapSanityVariants(
       updatedVariantsWithLocations,
       sanityLocationsData
-    );
-
-    console.log(
-      'preparedSanityVariantsArr?.[0]\n',
-      preparedSanityVariantsArr?.length,
-      '\n',
-      JSON.stringify(preparedSanityVariantsArr?.[0], null, 2)
     );
 
     for (const item of preparedSanityVariantsArr) {
