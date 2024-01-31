@@ -99,17 +99,14 @@ try {
 
   const fulfillmentServicesDataArr = [];
 
+  let sanityLocationsData, updatedVariantsWithLocations;
+
   for (let i = 0; i < fulfillmentServicesArr?.length; i += 1) {
     const singleFulfillment =
       await shopifyService.getInventoryLevelsByFulFillmentServiceId({
         session,
         fulfillment_service_id: `gid://shopify/FulfillmentService/${fulfillmentServicesArr?.[i]?.id}`,
       });
-
-    console.log(
-      'singleFulfillment\n',
-      JSON.stringify(singleFulfillment?.nodes?.[0], null, 2)
-    );
 
     if (singleFulfillment) {
       const preparedDataArr =
@@ -121,8 +118,8 @@ try {
   }
 
   console.log(
-    'fulfillmentServicesDataArr?.[0]\n',
-    fulfillmentServicesDataArr?.[0]
+    'fulfillmentServicesDataArr?.length: ',
+    fulfillmentServicesDataArr?.length
   );
 
   if (data) {
@@ -140,17 +137,16 @@ try {
       console.warn('Locations by fulfillmentServices not created');
     }
 
-    const sanityLocationsData = await sanityService.getLocations();
+    sanityLocationsData = await sanityService.getLocations();
 
-    const updatedVariantsWithLocations =
-      updateVariantsByFulFillmentServicesData(
-        data?.variantsWithLocations,
-        fulfillmentServicesDataArr
-      );
+    updatedVariantsWithLocations = updateVariantsByFulFillmentServicesData(
+      data?.variantsWithLocations,
+      fulfillmentServicesDataArr
+    );
 
     console.log(
-      'updatedVariantsWithLocations?.[0]\n',
-      JSON.stringify(updatedVariantsWithLocations?.[0], null, 2)
+      'updatedVariantsWithLocations?.length: ',
+      updatedVariantsWithLocations?.length
     );
 
     const preparedSanityVariantsArr = mapSanityVariants(
@@ -160,25 +156,30 @@ try {
 
     console.log(
       'preparedSanityVariantsArr?.[0]\n',
+      preparedSanityVariantsArr?.length,
+      '\n',
       JSON.stringify(preparedSanityVariantsArr?.[0], null, 2)
     );
 
-    // for (const item of preparedSanityVariantsArr) {
-    //   await sanityService.init_updateSingleVariantWithLocations(
-    //     item?.variantId,
-    //     item?.inventoryItemId,
-    //     item?.locations
-    //   );
-    // }
+    for (const item of preparedSanityVariantsArr) {
+      await sanityService.init_updateSingleVariantWithLocations(
+        item?.variantId,
+        item?.inventoryItemId,
+        item?.locations
+      );
+    }
   }
-
-  console.log('\n=========================================================\n');
 
   console.log(
     '\n========================= INIT SCRIPT END ================================\n'
   );
 
-  parentPort.postMessage({ data });
+  parentPort.postMessage({
+    data: {
+      variantsWithLocations: updatedVariantsWithLocations,
+      locationsArr: data?.locationsArr,
+    },
+  });
 } catch (error) {
   console.log('initialSyncScript error: ', error);
 
