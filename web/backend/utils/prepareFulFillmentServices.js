@@ -20,8 +20,6 @@ export function prepareSingleFulfillmentServiceData(data) {
   const locationIdStr = data?.location_id;
   const nodes = data?.nodes;
 
-  console.log('locationIdStr', locationIdStr);
-
   const locationIdIdx = locationIdStr?.lastIndexOf('/');
   const locationId = locationIdStr?.slice(locationIdIdx + 1);
 
@@ -63,7 +61,8 @@ export function updateVariantsByFulFillmentServicesData(
     } else {
       console.log(
         'NOT FOUND searchedFulfillmentServiceVariant: ',
-        searchedFulfillmentServiceVariant
+        item?.variantId,
+        variant?.variantId
       );
     }
 

@@ -262,8 +262,6 @@ class SanityService {
       for (let i = 0; i < locationsArr?.length; i += 1) {
         const curLocationName = locationsArr?.[i]?.name;
 
-        console.log('curLocationName', curLocationName);
-
         const searchedSanityLocation = currentSanityLocations?.find((item) =>
           curLocationName?.toLowerCase()?.includes(item?.name?.toLowerCase())
         );

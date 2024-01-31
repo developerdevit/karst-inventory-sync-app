@@ -59,7 +59,11 @@ try {
   // FETCH FULLFILLMENT SERVICES
   // PUSH fullfillment services to Sanity
 
-  // await sanityService.init_deleteLocations();
+  const deleteLocRes = await sanityService.init_deleteLocations();
+
+  if (deleteLocRes) {
+    console.log('deleteLocRes: ', JSON.stringify(deleteLocRes));
+  }
 
   const createdBulkOperationId = await createBulkOperation(client);
 
@@ -148,13 +152,13 @@ try {
       sanityLocationsData
     );
 
-    for (const item of preparedSanityVariantsArr) {
-      await sanityService.init_updateSingleVariantWithLocations(
-        item?.variantId,
-        item?.inventoryItemId,
-        item?.locations
-      );
-    }
+    // for (const item of preparedSanityVariantsArr) {
+    //   await sanityService.init_updateSingleVariantWithLocations(
+    //     item?.variantId,
+    //     item?.inventoryItemId,
+    //     item?.locations
+    //   );
+    // }
   }
 
   console.log(
