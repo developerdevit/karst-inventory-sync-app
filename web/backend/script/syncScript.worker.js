@@ -152,13 +152,13 @@ try {
       sanityLocationsData
     );
 
-    // for (const item of preparedSanityVariantsArr) {
-    //   await sanityService.init_updateSingleVariantWithLocations(
-    //     item?.variantId,
-    //     item?.inventoryItemId,
-    //     item?.locations
-    //   );
-    // }
+    for (const item of preparedSanityVariantsArr) {
+      await sanityService.init_updateSingleVariantWithLocations(
+        item?.variantId,
+        item?.inventoryItemId,
+        item?.locations
+      );
+    }
   }
 
   console.log(
