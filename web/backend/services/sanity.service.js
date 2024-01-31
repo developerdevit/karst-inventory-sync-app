@@ -219,8 +219,8 @@ class SanityService {
         .patch(_id)
         .setIfMissing({
           inventoryItemId,
-          locations: [],
         })
+        .set('locations', [])
         .append('locations', locations)
         .commit({ autoGenerateArrayKeys: true });
 

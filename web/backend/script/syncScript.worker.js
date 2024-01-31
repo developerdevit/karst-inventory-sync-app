@@ -174,6 +174,12 @@ try {
     '\n========================= INIT SCRIPT END ================================\n'
   );
 
+  console.log('data?.locationsArr: ', JSON.stringify(data?.locationsArr));
+
+  console.log('\n=========================================================\n');
+
+  console.log('sanityLocations: ', JSON.stringify(sanityLocationsData?.[0]));
+
   parentPort.postMessage({
     data: {
       variantsWithLocations: updatedVariantsWithLocations,
