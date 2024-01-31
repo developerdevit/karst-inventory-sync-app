@@ -277,7 +277,7 @@ class SanityService {
           curLocationName?.toLowerCase()?.includes(loc.name.toLowerCase())
         );
 
-        console.log('searchedLocation', searchedLocation);
+        console.log('searchedLocation', curLocationName, searchedLocation);
 
         const res = await sanityClient.create(
           isFulfillmentService

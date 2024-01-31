@@ -61,7 +61,6 @@ export function updateVariantsByFulFillmentServicesData(
     } else {
       console.log(
         'NOT FOUND searchedFulfillmentServiceVariant: ',
-        item?.variantId,
         variant?.variantId
       );
     }
