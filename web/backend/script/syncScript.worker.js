@@ -82,11 +82,12 @@ try {
       `Can't get fileUrl from bulkOperation result with max retries ${MAX_RETRY_AMOUNT}`
     );
     parentPort.postMessage({ data: null });
-
-    // return;
   }
 
-  let loadingResult = false;
+  let sanityLocationsData,
+    updatedVariantsWithLocations,
+    loadingResult = false;
+  const fulfillmentServicesDataArr = [];
 
   if (fileUrl) {
     loadingResult = await downloadFile(fileUrl, filePath);
@@ -97,9 +98,10 @@ try {
     session,
   });
 
-  const fulfillmentServicesDataArr = [];
-
-  let sanityLocationsData, updatedVariantsWithLocations;
+  console.log(
+    'fulfillmentServicesArr: ',
+    JSON.stringify(fulfillmentServicesArr)
+  );
 
   for (let i = 0; i < fulfillmentServicesArr?.length; i += 1) {
     const singleFulfillment =
