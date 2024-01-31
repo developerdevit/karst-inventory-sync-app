@@ -80,7 +80,7 @@ export function updateVariantsByFulFillmentServicesData(
           ) {
             variant?.locations.push({
               id: searchedLocation?.id,
-              quantity: searchedLocation?.id,
+              quantity: searchedLocation?.quantity,
             });
           }
         }
