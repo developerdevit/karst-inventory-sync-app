@@ -17,8 +17,8 @@ export function prepareFulFillmentServices(res) {
 }
 
 export function prepareSingleFulfillmentServiceData(data) {
-  const locationIdStr = data?.fulfillmentService?.location?.id;
-  const nodes = data?.fulfillmentService?.location?.inventoryLevels?.edges;
+  const locationIdStr = data?.location_id;
+  const nodes = data?.nodes;
 
   console.log('locationIdStr', locationIdStr);
 

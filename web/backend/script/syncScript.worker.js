@@ -100,7 +100,7 @@ try {
   const fulfillmentServicesDataArr = [];
 
   for (let i = 0; i < fulfillmentServicesArr?.length; i += 1) {
-    const result =
+    const singleFulfillment =
       await shopifyService.getInventoryLevelsByFulFillmentServiceId({
         session,
         fulfillment_service_id: `gid://shopify/FulfillmentService/${fulfillmentServicesArr?.[i]?.id}`,
@@ -108,12 +108,12 @@ try {
 
     console.log(
       'singleFulfillment\n',
-      result
-      // JSON.stringify(singleFulfillment, null, 2)
+      JSON.stringify(singleFulfillment?.nodes?.[0], null, 2)
     );
 
-    if (result) {
-      const preparedDataArr = prepareSingleFulfillmentServiceData(result?.data);
+    if (singleFulfillment) {
+      const preparedDataArr =
+        prepareSingleFulfillmentServiceData(singleFulfillment);
 
       Array.isArray(preparedDataArr) &&
         fulfillmentServicesDataArr.push(...preparedDataArr);
@@ -122,7 +122,7 @@ try {
 
   console.log(
     'fulfillmentServicesDataArr?.[0]\n',
-    JSON.stringify(fulfillmentServicesDataArr?.[0], null, 2)
+    fulfillmentServicesDataArr?.[0]
   );
 
   if (data) {
