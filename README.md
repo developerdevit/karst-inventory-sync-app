@@ -1,4 +1,82 @@
-# Shopify App Template for Node
+# Shopify-Sanity Inventory Synchronization Custom App
+
+This is a Custom Shopify Application for synchronization of Shopify inventory levels (product variant's quantities by each location/fulfillment service) with Sanity dataset.
+
+## App structure
+
+App consists of 2 parts:
+
+- **Frontend - Store Admin App** - installed on Shopify store app for management sync script and view info
+- **Backend - server** - server application for running initial sync script and receiving webhooks on inventory level updates
+
+### Store Admin App
+
+Currently there are 2 pages in Store Admin App:
+
+- **Home** - simple page to start initial script and visualize it's received data
+- **Info** - contains all about VPS instance and Redis database state, includes error logs files for downloading
+
+### App Functionality
+
+The first application core functionality is **initial synchronization of Shopify inventory levels/items + quantities with Sanity dataset**. On running initial script the app fetches to create a Shopify bulk operation, which aim is to collect whole data about inventory levels/items, locations and quantities. After receiving jsonl-format file the app parses data and stores it in Sanity dataset.
+The second application core functionality is **updating product variants quantities in Sanity dataset while receiving webhooks from Shopify**. The app subscribes to several webhooks after installation on store and it proceeds the updating Sanity documents on triggering that webhooks. To prevent data lost and server overload each webhook is pushed to Redis queue.
+
+### Tech stack
+
+App is created with following frameworks, libraries/packages and tools:
+
+- **Backend**:
+  - [Express.js](https://expressjs.com/) - Fast, unopinionated, minimalist web framework for Node.js
+  - [ioredis](https://www.npmjs.com/package/ioredis) - A robust, performance-focused and full-featured Redis client for Node.js.
+  - [bullmq](https://www.npmjs.com/package/bullmq) - The fastest, most reliable, Redis-based distributed queue for Node.
+  - [winston](https://www.npmjs.com/package/winston) - A logger for just about everything.
+  - [Shopify Api](https://www.npmjs.com/package/@shopify/shopify-api) - This library provides support for the backends of TypeScript/JavaScript Shopify apps to access the Shopify Admin API
+  - [Shopify App Express](https://www.npmjs.com/package/@shopify/shopify-app-express) - This package makes it easy for Express.js apps to integrate with Shopify
+- **Frontend**:
+  - [React.js](https://react.dev/) bundeled with [Vite](https://vitejs.dev/)
+  - [Shopify App Bridge](https://www.npmjs.com/package/@shopify/app-bridge) - You can use Shopify App Bridge to embed apps and channels directly into the Shopify admin, Shopify Mobile, and Shopify POS
+  - [Shopipfy Polaris](https://www.npmjs.com/package/@shopify/polaris) - Polaris React is a component library designed to help developers create the best experience for merchants who use Shopify. Visit the [Polaris style guide](https://polaris.shopify.com/) to learn more.
+
+[Shopify CLI](https://shopify.dev/docs/apps/tools/cli) is used to configure and to build App.
+
+### Database
+
+Redis database is used in this app:
+
+- to store session data
+- to store and manage queue of received webhooks
+
+To run Redis DB locally you can run following commands from project root in terminal - please make sure you have installed [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/install/):
+
+```sh
+cd Docker
+docker-compose up
+```
+
+This command will rise a docker container with Redis DB.
+
+## Development
+
+### Requirements
+
+- [Shopify partner account](https://partners.shopify.com/)
+- Shopify test store
+- [node.js](https://nodejs.org/en) (version >= 20.5.0)
+- locally run Redis DB
+
+_Nice to have_: [ngrok](https://ngrok.com/) account with static domain for creating tunnel.
+
+**ngrok command example:**
+
+```sh
+ngrok http --domain=usually-pro-shad.ngrok-free.app 3030
+```
+
+### Env variables
+
+Create new `.env` files in `web/backend` and `web/frontend` folders. Fill the env variables like it described in `env.example` in each folder.
+
+## Shopify App Template for Node
 
 This is a template for building a [Shopify app](https://shopify.dev/docs/apps/getting-started) using Node and React. It contains the basics for building a Shopify app.
 
@@ -160,20 +238,20 @@ We fixed this issue with v3.4.0 of the CLI, so after updating it, you can make t
 
    ```js
    const host = process.env.HOST
-     ? process.env.HOST.replace(/https?:\/\//, "")
-     : "localhost";
+     ? process.env.HOST.replace(/https?:\/\//, '')
+     : 'localhost';
 
    let hmrConfig;
-   if (host === "localhost") {
+   if (host === 'localhost') {
      hmrConfig = {
-       protocol: "ws",
-       host: "localhost",
+       protocol: 'ws',
+       host: 'localhost',
        port: 64999,
        clientPort: 64999,
      };
    } else {
      hmrConfig = {
-       protocol: "wss",
+       protocol: 'wss',
        host: host,
        port: process.env.FRONTEND_PORT,
        clientPort: 443,
