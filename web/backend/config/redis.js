@@ -13,7 +13,13 @@ let redisClient, connection, sessionStorage;
 console.log('REDIS_URL', JSON.stringify(REDIS_URL, null, 2));
 
 try {
-  redisClient = redis.createClient(process.env.REDIS_URL);
+  redisClient = redis.createClient({
+    url: REDIS_URL,
+    socket: {
+      tls: true,
+      rejectUnauthorized: false,
+    },
+  });
   // redisClient = new Redis(REDIS_URL, {
   //   maxRetriesPerRequest: null,
   //   tls: {
