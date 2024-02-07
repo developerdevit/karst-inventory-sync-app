@@ -8,7 +8,7 @@ import logger from './logger.js';
 
 const { Worker, Queue, RedisConnection } = pkg;
 
-let redisClient, sessionStorage;
+let redisClient, sessionStorage, connection;
 
 const host = REDIS_TLS_URL.split('@')[1].split(':')[0];
 const port = parseInt(REDIS_TLS_URL.split('@')[1].split(':')[1]);
@@ -30,10 +30,10 @@ try {
     },
   });
 
-  sessionStorage = new RedisSessionStorage(`${REDIS_TLS_URL}/1`);
+  sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
 
   // redis://:p90689d458616548983786890e0a1f59b390b6721ffee1024598818ffcdb60232@ec2-3-248-40-254.eu-west-1.compute.amazonaws.com:31459
-  // connection = new RedisConnection(redisClient);
+  connection = new RedisConnection(redisClient);
 } catch (error) {
   logger.error('redis connection error: ' + error);
   console.log('redis connection error: ', error);
@@ -42,14 +42,14 @@ try {
 const updateInventoryLevelsWebhookQueue = new Queue(
   'updateInventoryLevelsWebhookQueue',
   {
-    connection: redisClient,
+    connection,
   }
 );
 
 const updateInventoryLevelsWorker = new Worker(
   'updateInventoryLevelsWebhookQueue',
   workerUpdateCallback,
-  { connection: redisClient, removeOnComplete: { count: 0 } }
+  { connection, removeOnComplete: { count: 0 } }
 );
 
 export {
