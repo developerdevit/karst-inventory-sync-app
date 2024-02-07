@@ -19,7 +19,6 @@ console.log('REDIS_URL', REDIS_URL, host, port, password);
 const connection = {
   host,
   port,
-  password,
 };
 
 try {
