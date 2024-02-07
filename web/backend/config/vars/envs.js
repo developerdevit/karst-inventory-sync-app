@@ -14,14 +14,7 @@ const SANITY_DATASET = process.env.SANITY_DATASET;
 const SANITY_API_TOKEN = process.env.SANITY_API_TOKEN;
 const SANITY_API_VERSION = process.env.SANITY_API_VERSION;
 
-const REDIS_URL = process.env.REDIS_URL
-  ? {
-      password: process.env.REDIS_URL.split('@')[0].split(':')[2],
-      host: process.env.REDIS_URL.split('@')[1].split(':')[0],
-      port: parseInt(process.env.REDIS_URL.split('@')[1].split(':')[1]),
-      tls: { rejectUnauthorized: false },
-    }
-  : 'redis://localhost:6379';
+const REDIS_URL = process.env.REDIS_URL;
 
 export {
   HOST,
