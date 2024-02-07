@@ -1,4 +1,4 @@
-import Redis from 'ioredis';
+import redis from 'redis';
 import pkg from 'bullmq';
 import { RedisSessionStorage } from '@shopify/shopify-app-session-storage-redis';
 
@@ -13,12 +13,13 @@ let redisClient, connection, sessionStorage;
 console.log('REDIS_URL', JSON.stringify(REDIS_URL, null, 2));
 
 try {
-  redisClient = new Redis(REDIS_URL, {
-    maxRetriesPerRequest: null,
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
+  redisClient = redis.createClient(process.env.REDIS_URL);
+  // redisClient = new Redis(REDIS_URL, {
+  //   maxRetriesPerRequest: null,
+  //   tls: {
+  //     rejectUnauthorized: false,
+  //   },
+  // });
 
   sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
 
