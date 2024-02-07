@@ -16,10 +16,6 @@ try {
   redisClient = await redis
     .createClient({
       url: REDIS_URL,
-      socket: {
-        tls: true,
-        rejectUnauthorized: false,
-      },
     })
     .on('error', (err) => console.log('Redis Client Error', err))
     .connect();
