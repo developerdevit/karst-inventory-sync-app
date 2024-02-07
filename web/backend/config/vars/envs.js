@@ -15,6 +15,7 @@ const SANITY_API_TOKEN = process.env.SANITY_API_TOKEN;
 const SANITY_API_VERSION = process.env.SANITY_API_VERSION;
 
 const REDIS_URL = process.env.REDIS_URL;
+const REDIS_TLS_URL = process.env.REDIS_TLS_URL;
 
 export {
   HOST,
@@ -27,4 +28,5 @@ export {
   SHOPIFY_API_KEY,
   SHOPIFY_API_SECRET,
   REDIS_URL,
+  REDIS_TLS_URL,
 };
