@@ -1,0 +1,26 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "Karst Inventory Sync App"
+client_id = "bea8031c64c3b6e7d2ee98baf7810590"
+application_url = "https://inventory-sync-app-8c00d883f7a4.herokuapp.com"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+use_legacy_install_flow = true
+
+[auth]
+redirect_urls = [
+  "https://inventory-sync-app-8c00d883f7a4.herokuapp.com/auth/callback",
+  "https://inventory-sync-app-8c00d883f7a4.herokuapp.com/auth/shopify/callback",
+  "https://inventory-sync-app-8c00d883f7a4.herokuapp.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-01"
+
+[pos]
+embedded = false
+
+[build]
+dev_store_url = "inventory-location-test-store.myshopify.com"
