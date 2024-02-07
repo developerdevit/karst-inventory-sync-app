@@ -8,18 +8,13 @@ import logger from './logger.js';
 
 const { Worker, Queue, RedisConnection } = pkg;
 
-let redisClient, sessionStorage;
+let redisClient, sessionStorage, connection;
 
 const host = REDIS_URL.split('@')[1].split(':')[0];
 const port = parseInt(REDIS_URL.split('@')[1].split(':')[1]);
 const password = REDIS_URL.split('@')[0].split(':')[2];
 
 console.log('REDIS_URL', REDIS_URL, host, port, password);
-
-const connection = {
-  host,
-  port,
-};
 
 try {
   // redisClient = await redis
@@ -38,7 +33,7 @@ try {
   sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
 
   // redis://:p90689d458616548983786890e0a1f59b390b6721ffee1024598818ffcdb60232@ec2-3-248-40-254.eu-west-1.compute.amazonaws.com:31459
-  // connection = new RedisConnection(redisClient);
+  connection = new RedisConnection(redisClient);
 } catch (error) {
   logger.error('redis connection error: ' + error);
   console.log('redis connection error: ', error);
