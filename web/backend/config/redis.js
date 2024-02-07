@@ -15,6 +15,9 @@ console.log('REDIS_URL', JSON.stringify(REDIS_URL, null, 2));
 try {
   redisClient = new Redis(REDIS_URL, {
     maxRetriesPerRequest: null,
+    tls: {
+      rejectUnauthorized: false,
+    },
   });
 
   sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
