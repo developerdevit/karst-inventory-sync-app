@@ -10,6 +10,8 @@ const { Worker, Queue, RedisConnection } = pkg;
 
 let redisClient, connection, sessionStorage;
 
+console.log('REDIS_URL', JSON.stringify(REDIS_URL, null, 2));
+
 try {
   redisClient = new Redis(REDIS_URL, {
     maxRetriesPerRequest: null,
