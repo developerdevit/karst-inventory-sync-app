@@ -15,7 +15,7 @@ console.log('REDIS_URL', REDIS_URL);
 
 try {
   // REDIS_TLS_URL
-  redisClient = new Redis(REDIS_URL, {
+  redisClient = new Redis(REDIS_TLS_URL ?? REDIS_URL, {
     maxRetriesPerRequest: null,
     ...(REDIS_URL.startsWith('rediss://') ? { tls: { rejectUnauthorized: false } } : {}),
   });
