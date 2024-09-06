@@ -9,14 +9,14 @@ async function removeLocations() {
   }
 }
 
-async function getQueueLength() {
-  const counts = await updateInventoryLevelsWebhookQueue.getJobCounts();
-  const queueLength =
-    counts.waiting + counts.active + counts.completed + counts.failed;
+// async function getQueueLength() {
+//   const counts = await updateInventoryLevelsWebhookQueue.getJobCounts();
+//   const queueLength =
+//     counts.waiting + counts.active + counts.completed + counts.failed;
 
-  console.log('Queue Length:', queueLength);
-}
+//   console.log('Queue Length:', queueLength);
+// }
 
 // removeLocations();
 
-getQueueLength();
+// getQueueLength();

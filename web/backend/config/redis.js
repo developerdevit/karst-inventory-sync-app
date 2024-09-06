@@ -29,17 +29,18 @@ try {
   console.log('redis connection error: ', error);
 }
 
-const updateInventoryLevelsWebhookQueue = new Queue(
-  'updateInventoryLevelsWebhookQueue',
-  {
-    redis: {
-      password: REDIS_URL.split('@')[0].split(':')[2],
-      host: REDIS_URL.split('@')[1].split(':')[0],
-      port: parseInt(REDIS_URL.split('@')[1].split(':')[1]),
-      tls: { rejectUnauthorized: false },
-    },
-  }
-);
+const updateInventoryLevelsWebhookQueue = null;
+// new Queue(
+//   'updateInventoryLevelsWebhookQueue',
+//   {
+//     redis: {
+//       password: REDIS_URL.split('@')[0].split(':')[2],
+//       host: REDIS_URL.split('@')[1].split(':')[0],
+//       port: parseInt(REDIS_URL.split('@')[1].split(':')[1]),
+//       tls: { rejectUnauthorized: false },
+//     },
+//   }
+// );
 
 const updateInventoryLevelsWorker = null;
 // new Worker(
