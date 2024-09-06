@@ -8,11 +8,11 @@ import { webhookHandlers } from './webhooks/index.js';
 import { PORT } from './config/vars/envs.js';
 import { STATIC_PATH, __dirname } from './config/vars/constants.js';
 import { initialSyncScript } from './script/initialSyncScript.js';
-import { redisClient } from './config/redis.js';
+// import { redisClient } from './config/redis.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import {
   getListOfErrorLogsFiles,
-  getRedisDbReadableInfo,
+  // getRedisDbReadableInfo,
   getVPSStateData,
 } from './utils/getReadableInfo.js';
 import shopifyService from './services/shopify.service.js';
@@ -60,17 +60,17 @@ app.post('/api/run-sync-script', async (_req, res) => {
 });
 //
 app.get('/api/info', async (_req, res) => {
-  const redisInfo = await getRedisDbReadableInfo(redisClient);
+  // const redisInfo = await getRedisDbReadableInfo(redisClient);
   const files = await getListOfErrorLogsFiles();
   const serverState = await getVPSStateData();
 
-  if (!redisInfo && !files) {
+  if (!files) {
     res.status(404).send({ success: false, data: null });
   }
 
   res
     .status(200)
-    .send({ success: true, data: { info: redisInfo, files, serverState } });
+    .send({ success: true, data: { info: null, files, serverState } });
 });
 
 app.get('/api/test', async (_req, res) => {

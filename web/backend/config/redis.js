@@ -15,10 +15,10 @@ console.log('REDIS_URL', REDIS_URL);
 
 try {
   // REDIS_TLS_URL
-  redisClient = new Redis(REDIS_TLS_URL ?? REDIS_URL, {
-    maxRetriesPerRequest: null,
-    tls: { rejectUnauthorized: false },
-  });
+  // redisClient = new Redis(REDIS_TLS_URL ?? REDIS_URL, {
+  //   maxRetriesPerRequest: null,
+  //   tls: { rejectUnauthorized: false },
+  // });
 
   sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
   console.log('sessionStorage', sessionStorage);
@@ -49,6 +49,6 @@ const updateInventoryLevelsWorker = new Worker(
 export {
   updateInventoryLevelsWebhookQueue,
   updateInventoryLevelsWorker,
-  redisClient,
+  // redisClient,
   sessionStorage,
 };
