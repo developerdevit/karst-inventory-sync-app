@@ -20,6 +20,18 @@ try {
     tls: { rejectUnauthorized: false },
   });
 
+  const url = new URL(process.env.REDIS_URL);
+  const sessionStorage = new RedisSessionStorage(url, {
+      url: url.toString(),
+      socket: {
+        tls: true,
+        rejectUnauthorized: false,
+      },
+      onError(error) {
+        console.error(`RedisSessionStorage err:  ${error}`);
+      },
+    })
+
   // console.log('redisClient', redisClient);
 
   // const shopify = shopifyApp({
@@ -27,7 +39,7 @@ try {
   //   // ...
   // });
 
-  sessionStorage = new RedisSessionStorage(redisClient);
+  // sessionStorage = new RedisSessionStorage(redisClient);
   // sessionStorage = {};
   console.log('sessionStorage', sessionStorage);
   
