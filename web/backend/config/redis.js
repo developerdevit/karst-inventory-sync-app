@@ -20,12 +20,14 @@ try {
     tls: { rejectUnauthorized: false },
   });
 
-  console.log('redisClient', redisClient);
+  // console.log('redisClient', redisClient);
 
+  // const shopify = shopifyApp({
+  //   sessionStorage: new RedisSessionStorage(client),
+  //   // ...
+  // });
 
-  // sessionStorage = new RedisSessionStorage(`${REDIS_URL}`, {
-  //     client: redisClient,
-  //   });
+  sessionStorage = new RedisSessionStorage(redisClient);
   // sessionStorage = {};
   console.log('sessionStorage', sessionStorage);
   
