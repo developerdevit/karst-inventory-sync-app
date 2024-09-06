@@ -11,6 +11,7 @@ const { Worker, Queue } = pkg;
 let redisClient, sessionStorage;
 
 console.log('REDIS_TLS_URL', REDIS_TLS_URL);
+console.log('REDIS_URL', REDIS_URL);
 
 try {
   // REDIS_TLS_URL
