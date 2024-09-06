@@ -20,9 +20,12 @@ try {
     tls: { rejectUnauthorized: false },
   });
 
-  sessionStorage = new RedisSessionStorage(`${REDIS_URL}`, {
-      client: redisClient,
-    });
+  console.log('redisClient', redisClient);
+
+
+  // sessionStorage = new RedisSessionStorage(`${REDIS_URL}`, {
+  //     client: redisClient,
+  //   });
   // sessionStorage = {};
   console.log('sessionStorage', sessionStorage);
   
