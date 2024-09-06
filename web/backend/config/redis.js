@@ -20,8 +20,8 @@ try {
   //   tls: { rejectUnauthorized: false },
   // });
 
-  // sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
-  sessionStorage = {};
+  sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
+  // sessionStorage = {};
   console.log('sessionStorage', sessionStorage);
   
 } catch (error) {
