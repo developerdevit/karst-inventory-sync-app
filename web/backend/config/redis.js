@@ -20,7 +20,8 @@ try {
   //   tls: { rejectUnauthorized: false },
   // });
 
-  sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
+  // sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
+  sessionStorage = {};
   console.log('sessionStorage', sessionStorage);
   
 } catch (error) {
@@ -40,16 +41,17 @@ const updateInventoryLevelsWebhookQueue = new Queue(
   }
 );
 
-const updateInventoryLevelsWorker = new Worker(
-  'updateInventoryLevelsWebhookQueue',
-  workerUpdateCallback,
-  {
-    connection: {
-      host: REDIS_URL.split('@')[1].split(':')[0],
-      port: parseInt(REDIS_URL.split('@')[1].split(':')[1]),
-    },
-  }
-);
+const updateInventoryLevelsWorker = null;
+// new Worker(
+//   'updateInventoryLevelsWebhookQueue',
+//   workerUpdateCallback,
+//   {
+//     connection: {
+//       host: REDIS_URL.split('@')[1].split(':')[0],
+//       port: parseInt(REDIS_URL.split('@')[1].split(':')[1]),
+//     },
+//   }
+// );
 
 export {
   updateInventoryLevelsWebhookQueue,
