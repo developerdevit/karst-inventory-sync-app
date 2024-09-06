@@ -15,13 +15,13 @@ console.log('REDIS_URL', REDIS_URL);
 
 try {
   // REDIS_TLS_URL
-  redisClient = new Redis(REDIS_TLS_URL ?? REDIS_URL, {
+  redisClient = new Redis(REDIS_URL, {
     maxRetriesPerRequest: null,
     tls: { rejectUnauthorized: false },
   });
 
-  const url = new URL(process.env.REDIS_URL);
-  const sessionStorage = new RedisSessionStorage(url, {
+  const url = new URL(REDIS_URL);
+  sessionStorage = new RedisSessionStorage(url, {
       url: url.toString(),
       socket: {
         tls: true,
@@ -31,24 +31,26 @@ try {
         console.error(`RedisSessionStorage err:  ${error}`);
       },
     })
-
-  // console.log('redisClient', redisClient);
-
-  // const shopify = shopifyApp({
-  //   sessionStorage: new RedisSessionStorage(client),
-  //   // ...
-  // });
-
-  // sessionStorage = new RedisSessionStorage(redisClient);
-  // sessionStorage = {};
-  console.log('sessionStorage', sessionStorage);
   
 } catch (error) {
   logger.error('redis connection error: ' + error);
   console.log('redis connection error: ', error);
 }
 
-const updateInventoryLevelsWebhookQueue = null;
+const updateInventoryLevelsWebhookQueue = new Queue(
+  'updateInventoryLevelsWebhookQueue',
+  {
+    connection: redisClient,
+  }
+);
+
+const updateInventoryLevelsWorker = new Worker(
+  'updateInventoryLevelsWebhookQueue',
+  workerUpdateCallback,
+  { connection: redisClient, removeOnComplete: { count: 0 } }
+);
+
+// const updateInventoryLevelsWebhookQueue = 
 // new Queue(
 //   'updateInventoryLevelsWebhookQueue',
 //   {
@@ -61,8 +63,7 @@ const updateInventoryLevelsWebhookQueue = null;
 //   }
 // );
 
-const updateInventoryLevelsWorker = null;
-// new Worker(
+// const updateInventoryLevelsWorker =  new Worker(
 //   'updateInventoryLevelsWebhookQueue',
 //   workerUpdateCallback,
 //   {
@@ -76,6 +77,6 @@ const updateInventoryLevelsWorker = null;
 export {
   updateInventoryLevelsWebhookQueue,
   updateInventoryLevelsWorker,
-  // redisClient,
+  redisClient,
   sessionStorage,
 };
