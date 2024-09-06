@@ -17,6 +17,9 @@ const SANITY_API_VERSION = process.env.SANITY_API_VERSION;
 const REDIS_URL = process.env.REDIS_URL;
 const REDIS_TLS_URL = process.env.REDIS_TLS_URL;
 
+console.log('process.env.',  process.env);
+
+
 export {
   HOST,
   PORT,

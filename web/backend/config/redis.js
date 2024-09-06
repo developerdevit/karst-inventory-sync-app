@@ -17,12 +17,12 @@ try {
   // REDIS_TLS_URL
   redisClient = new Redis(REDIS_URL, {
     maxRetriesPerRequest: null,
-    tls: {
-      rejectUnauthorized: false,
-    },
+    ...(REDIS_URL.startsWith('rediss://') ? { tls: { rejectUnauthorized: false } } : {}),
   });
 
   sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
+  console.log('sessionStorage', sessionStorage);
+  
 } catch (error) {
   logger.error('redis connection error: ' + error);
   console.log('redis connection error: ', error);
