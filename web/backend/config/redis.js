@@ -17,7 +17,7 @@ try {
   // REDIS_TLS_URL
   redisClient = new Redis(REDIS_TLS_URL ?? REDIS_URL, {
     maxRetriesPerRequest: null,
-    ...(REDIS_URL.startsWith('rediss://') ? { tls: { rejectUnauthorized: false } } : {}),
+    tls: { rejectUnauthorized: false },
   });
 
   sessionStorage = new RedisSessionStorage(`${REDIS_URL}/1`);
@@ -31,7 +31,12 @@ try {
 const updateInventoryLevelsWebhookQueue = new Queue(
   'updateInventoryLevelsWebhookQueue',
   {
-    connection: redisClient,
+    redis: {
+      password: REDIS_URL.split('@')[0].split(':')[2],
+      host: REDIS_URL.split('@')[1].split(':')[0],
+      port: parseInt(REDIS_URL.split('@')[1].split(':')[1]),
+      tls: { rejectUnauthorized: false },
+    },
   }
 );
 
