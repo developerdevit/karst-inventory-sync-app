@@ -44,13 +44,10 @@ const updateInventoryLevelsWorker = new Worker(
   'updateInventoryLevelsWebhookQueue',
   workerUpdateCallback,
   {
-    redis: {
-      password: REDIS_URL.split('@')[0].split(':')[2],
+    connection: {
       host: REDIS_URL.split('@')[1].split(':')[0],
       port: parseInt(REDIS_URL.split('@')[1].split(':')[1]),
-      tls: { rejectUnauthorized: false },
     },
-    removeOnComplete: { count: 0 }
   }
 );
 
