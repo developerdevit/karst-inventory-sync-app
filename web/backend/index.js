@@ -58,7 +58,7 @@ app.post('/api/run-sync-script', async (_req, res) => {
 
   res.status(200).send({ success: true, data: result });
 });
-
+//
 app.get('/api/info', async (_req, res) => {
   const redisInfo = await getRedisDbReadableInfo(redisClient);
   const files = await getListOfErrorLogsFiles();
