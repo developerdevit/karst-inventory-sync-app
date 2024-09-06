@@ -2,12 +2,6 @@
 
 const fulfillmentServices = [
   {
-    id: 1,
-    name: 'ShipBobFulfillment-16546',
-    code: 'US',
-    stockCoverage: ['US', 'CA', 'MX', 'BR'],
-  },
-  {
     id: 2,
     name: 'Janssen Fulfillment Service',
     code: 'EU',

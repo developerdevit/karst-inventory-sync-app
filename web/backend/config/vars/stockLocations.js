@@ -2,12 +2,6 @@
 
 const stockLocations = [
   {
-    id: 1,
-    name: 'ShipBob - Marino Valley',
-    code: 'US',
-    stockCoverage: ['US', 'CA', 'MX', 'BR'],
-  },
-  {
     id: 2,
     name: 'Service Logistics',
     code: 'EU',
@@ -50,12 +44,6 @@ const stockLocations = [
     stockCoverage: ['AU', 'JP', 'HK', 'NZ', 'SG', 'KR'],
   },
   {
-    id: 4,
-    name: 'ShipBobFulfillment-16546',
-    code: 'US',
-    stockCoverage: ['US', 'CA', 'MX', 'BR'],
-  },
-  {
     id: 5,
     name: 'Janssen Fulfillment Service',
     code: 'EU',
@@ -90,6 +78,12 @@ const stockLocations = [
       'AE',
       'GB',
     ],
+  },
+  {
+    id: 6,
+    name: 'Connecticut Warehouse (Ameico)',
+    code: 'US',
+    stockCoverage: ['US', 'CA', 'MX', 'BR'],
   },
 ];
 

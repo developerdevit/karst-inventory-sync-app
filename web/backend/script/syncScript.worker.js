@@ -129,6 +129,11 @@ try {
   );
 
   if (data) {
+    const deletedLocationsRes = await sanityService.init_deleteLocations();
+
+    console.log('deletedLocationsRes', deletedLocationsRes);
+    
+
     const locationsResult = await sanityService.init_createLocations(
       data?.locationsArr
     );
