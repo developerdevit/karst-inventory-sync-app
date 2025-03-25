@@ -1,5 +1,5 @@
-import sanityClient from '../config/sanity.js';
-import { stockLocations } from '../config/vars/stockLocations.js';
+import sanityClient from "../config/sanity.js";
+import { stockLocations } from "../config/vars/stockLocations.js";
 
 class SanityService {
   //#region product && productVariants functions
@@ -11,7 +11,7 @@ class SanityService {
 
       return products;
     } catch (error) {
-      console.log('sanityService.getProducts error: ', error);
+      console.log("sanityService.getProducts error: ", error);
       return [];
     }
   }
@@ -22,7 +22,7 @@ class SanityService {
 
       return variants;
     } catch (error) {
-      console.log('sanityService.getProductVariants error: ', error);
+      console.log("sanityService.getProductVariants error: ", error);
       return [];
     }
   }
@@ -52,7 +52,7 @@ class SanityService {
       return variant;
     } catch (error) {
       console.log(
-        'sanityService.getProductVariantByInventoryItemIdAndLocationId error: ',
+        "sanityService.getProductVariantByInventoryItemIdAndLocationId error: ",
         error
       );
       return [];
@@ -93,10 +93,10 @@ class SanityService {
       if (searchedLocationIdx === -1) {
         return await sanityClient
           .patch(variant?._id)
-          .insert('before', `locations[0]`, [
+          .insert("before", `locations[0]`, [
             {
               location: {
-                _type: 'location',
+                _type: "location",
                 _ref: sanityLocationObj?._id,
               },
               quantity: available,
@@ -106,10 +106,10 @@ class SanityService {
       } else {
         return await sanityClient
           .patch(variant?._id)
-          .insert('replace', `locations[${searchedLocationIdx}]`, [
+          .insert("replace", `locations[${searchedLocationIdx}]`, [
             {
               location: {
-                _type: 'location',
+                _type: "location",
                 _ref: sanityLocationObj?._id,
               },
               quantity: available,
@@ -119,7 +119,7 @@ class SanityService {
       }
     } catch (error) {
       console.log(
-        'sanityService.updateProductVariantByInventoryItemIdAndLocationIdAndQuantity error: ',
+        "sanityService.updateProductVariantByInventoryItemIdAndLocationIdAndQuantity error: ",
         error
       );
       return [];
@@ -142,7 +142,7 @@ class SanityService {
 
       return result;
     } catch (error) {
-      console.log('sanityService.updateProductVariantById error: ', error);
+      console.log("sanityService.updateProductVariantById error: ", error);
       return null;
     }
   }
@@ -153,11 +153,9 @@ class SanityService {
         query: `*[_type == "productVariant" && store.gid == "gid://shopify/ProductVariant/${id}"]`,
       });
 
-      console.log('removed variant', variant);
-
       return variant;
     } catch (error) {
-      console.log('sanityService.deleteProductVariantById error: ', error);
+      console.log("sanityService.deleteProductVariantById error: ", error);
       return null;
     }
   }
@@ -168,12 +166,10 @@ class SanityService {
         query: `*[_type == "productVariant" && inventoryItemId == "${inventory_item_id}"]`,
       });
 
-      console.log('removed variant', variant);
-
       return variant;
     } catch (error) {
       console.log(
-        'sanityService.deleteProductVariantByInventoryItemId error: ',
+        "sanityService.deleteProductVariantByInventoryItemId error: ",
         error
       );
       return null;
@@ -186,7 +182,7 @@ class SanityService {
     try {
       return await sanityClient.fetch(`*[_type == "location"]`);
     } catch (error) {
-      console.log('sanityService.getLocations error: ', error);
+      console.log("sanityService.getLocations error: ", error);
       return [];
     }
   }
@@ -195,7 +191,7 @@ class SanityService {
     try {
       return await sanityClient.fetch(`count(*[_type == "location"])`);
     } catch (error) {
-      console.log('sanityService.getLocationsCount error: ', error);
+      console.log("sanityService.getLocationsCount error: ", error);
       return 0;
     }
   }
@@ -206,7 +202,7 @@ class SanityService {
         `*[_type == "location" && id == "${shopifyId}"][0]`
       );
     } catch (error) {
-      console.log('sanityService.getLocationByShopifyId error: ', error);
+      console.log("sanityService.getLocationByShopifyId error: ", error);
       return null;
     }
   }
@@ -221,13 +217,13 @@ class SanityService {
           inventoryItemId,
         })
         .set({ locations: [] })
-        .append('locations', locations)
+        .append("locations", locations)
         .commit({ autoGenerateArrayKeys: true });
 
       return res;
     } catch (error) {
       console.log(
-        'sanityService.init_updateSingleVariantWithLocations error: ',
+        "sanityService.init_updateSingleVariantWithLocations error: ",
         error?.message
       );
       return null;
@@ -246,7 +242,7 @@ class SanityService {
       return res;
     } catch (error) {
       console.log(
-        'sanityService.init_deleteSingleVariantLocations error: ',
+        "sanityService.init_deleteSingleVariantLocations error: ",
         error
       );
       return null;
@@ -277,7 +273,7 @@ class SanityService {
           curLocationName?.toLowerCase()?.includes(loc.name.toLowerCase())
         );
 
-        console.log('searchedLocation', curLocationName, searchedLocation);
+        console.log("searchedLocation", curLocationName, searchedLocation);
 
         const res = await sanityClient.create(
           isFulfillmentService
@@ -286,12 +282,12 @@ class SanityService {
                 countryCode: locationsArr?.[i]?.countryCode,
                 name: locationsArr?.[i]?.name,
                 stockCoverage: searchedLocation?.stockCoverage ?? [],
-                _type: 'location',
+                _type: "location",
               }
             : {
                 ...locationsArr?.[i],
                 stockCoverage: searchedLocation?.stockCoverage ?? [],
-                _type: 'location',
+                _type: "location",
               }
         );
 
@@ -302,7 +298,7 @@ class SanityService {
 
       return result;
     } catch (error) {
-      console.log('sanityService.init_createLocations error: ', error);
+      console.log("sanityService.init_createLocations error: ", error);
       return [];
     }
   }
@@ -313,7 +309,7 @@ class SanityService {
         _id
       }`);
 
-      console.log('init_deleteLocations variants', variants);
+      console.log("init_deleteLocations variants", variants);
 
       for (const variant of variants) {
         if (variant?._id) {
@@ -327,7 +323,7 @@ class SanityService {
 
       return res;
     } catch (error) {
-      console.log('sanityService.init_deleteLocations error: ', error);
+      console.log("sanityService.init_deleteLocations error: ", error);
       return [];
     }
   }
@@ -340,7 +336,7 @@ class SanityService {
 
       return res;
     } catch (error) {
-      console.log('sanityService.init_deleteOldLocations error: ', error);
+      console.log("sanityService.init_deleteOldLocations error: ", error);
       return [];
     }
   }
@@ -354,11 +350,88 @@ class SanityService {
 
       return res;
     } catch (error) {
-      console.log('sanityService.init_deleteLocationsByIds error: ', error);
+      console.log("sanityService.init_deleteLocationsByIds error: ", error);
       return [];
     }
   }
   //#endregion
+
+  async removeAllCompanyLocations() {
+    try {
+      const res = await sanityClient.delete({
+        query: `*[_type == 'company_location']`,
+      });
+
+      return {
+        success: true,
+        data: res,
+      };
+    } catch (error) {
+      console.log("sanityService.removeAllCompanyLocations error: ", error);
+      return {
+        success: false,
+        error: error,
+      };
+    }
+  }
+
+  async addCompanyLocations(companyLocations = []) {
+    const createMultipleItems = async () => {
+      const transaction = sanityClient.transaction();
+
+      companyLocations?.forEach((item) => {
+        transaction.create({
+          _type: "company_location",
+          id: item?.id,
+          name: item?.name,
+          company_id: item?.company?.id ?? null,
+          catalogs: item?.catalogs?.nodes?.map((catalog) => ({
+            id: catalog?.id,
+            title: catalog?.title,
+            status: catalog?.status,
+            currency: catalog?.priceList?.currency ?? null,
+          })),
+        });
+      });
+
+      try {
+        await transaction.commit();
+      } catch (error) {
+        console.error("Error creating company_locations:", error);
+        return {
+          success: false,
+          error: error,
+        };
+      }
+    };
+
+    createMultipleItems();
+
+    return {
+      success: true,
+    };
+  }
+
+  async getCompanyLocationCatalogsById(company_location_id) {
+    try {
+      return await sanityClient.fetch(
+        `*[_type == "company_location" && id == "gid://shopify/CompanyLocation/${company_location_id}"][0] {
+            id,
+            catalogs[] {
+              status,
+                currency,
+                title
+            }
+         }`
+      );
+    } catch (error) {
+      console.log(
+        "sanityService.getCompanyLocationCatalogsById error: ",
+        error
+      );
+      return null;
+    }
+  }
 }
 
 const sanityService = new SanityService();

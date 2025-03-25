@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
 const PORT = process.env.PORT ?? 4000;
@@ -17,6 +17,12 @@ const SANITY_API_VERSION = process.env.SANITY_API_VERSION;
 const REDIS_URL = process.env.REDIS_URL;
 const REDIS_TLS_URL = process.env.REDIS_TLS_URL;
 
+const SHOP_DOMAIN = process.env.SHOP_DOMAIN || "karst-stonepaper.myshopify.com";
+const HYDROGEN_SECRET = process.env.SECRET || "hello123";
+
+console.log("HYDROGEN_SECRET", HYDROGEN_SECRET);
+console.log("SHOP_DOMAIN", SHOP_DOMAIN);
+
 export {
   HOST,
   PORT,
@@ -29,4 +35,6 @@ export {
   SHOPIFY_API_SECRET,
   REDIS_URL,
   REDIS_TLS_URL,
+  HYDROGEN_SECRET,
+  SHOP_DOMAIN,
 };

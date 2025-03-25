@@ -1,5 +1,5 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -10,23 +10,21 @@ export const MAX_RETRY_AMOUNT = 200; // MAX_RETRY_AMOUNT * DEFAULT_FETCH_DELAY =
 
 export const QUEUE_SETTINGS = {
   removeOnComplete: true,
-  removeOnFail: 100,
+  removeOnFail: 51,
   attempts: 50,
   backoff: {
-    type: 'exponential',
+    type: "exponential",
     delay: 500,
   },
 };
 
 export const WEBHOOKS_ENUM = {
-  INVENTORY_LEVELS_UPDATE: 'INVENTORY_LEVELS_UPDATE',
-  INVENTORY_ITEMS_CREATE: 'INVENTORY_ITEMS_CREATE',
-  INVENTORY_ITEMS_DELETE: 'INVENTORY_ITEMS_DELETE',
+  INVENTORY_LEVELS_UPDATE: "INVENTORY_LEVELS_UPDATE",
+  INVENTORY_ITEMS_CREATE: "INVENTORY_ITEMS_CREATE",
+  INVENTORY_ITEMS_DELETE: "INVENTORY_ITEMS_DELETE",
 };
 
 export const STATIC_PATH =
-  process.env.NODE_ENV === 'production'
-    ? path.resolve(__dirname, '..', '..', '..', 'frontend/dist') //; `${process.cwd()}/frontend/dist`
-    : path.resolve(__dirname, '..', '..', '..', 'frontend'); //`${process.cwd()}/frontend/`;
-
-console.log('STATIC_PATH', STATIC_PATH);
+  process.env.NODE_ENV === "production"
+    ? path.resolve(__dirname, "..", "..", "..", "frontend/dist") //; `${process.cwd()}/frontend/dist`
+    : path.resolve(__dirname, "..", "..", "..", "frontend"); //`${process.cwd()}/frontend/`;

@@ -1,6 +1,6 @@
-import { DeliveryMethod } from '@shopify/shopify-api';
+import { DeliveryMethod } from "@shopify/shopify-api";
 
-import shopify from '../config/shopify.js';
+import shopify from "../config/shopify.js";
 
 import {
   uninstallApp,
@@ -13,7 +13,7 @@ import {
   locationsDeactivate,
   locationsDelete,
   locationsUpdate,
-} from './handlers/index.js';
+} from "./handlers/index.js";
 
 /**
  * @type {{[key: string]: import("@shopify/shopify-api").WebhookHandler}}
