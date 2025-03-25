@@ -42,6 +42,12 @@ app.get("/api/health-check", (_, res, next) => {
 
 app.get("/api/company_location_catalogs/:id", async (req, res) => {
   const authorizationHeader = req.headers?.authorization;
+  if (!authorizationHeader) {
+    return res
+      .status(401)
+      .send({ success: false, data: null, error: "Unauthorized" });
+  }
+
   const [bearer = null, secret = null] = authorizationHeader?.split(" ");
 
   if (bearer !== "Bearer" || secret !== HYDROGEN_SECRET) {
