@@ -18,7 +18,7 @@ const REDIS_URL = process.env.REDIS_URL;
 const REDIS_TLS_URL = process.env.REDIS_TLS_URL;
 
 const SHOP_DOMAIN = process.env.SHOP_DOMAIN || "karst-stonepaper.myshopify.com";
-const HYDROGEN_SECRET = process.env.SECRET || "hello123";
+const HYDROGEN_SECRET = process.env.HYDROGEN_SECRET || "hello123";
 
 console.log("HYDROGEN_SECRET", HYDROGEN_SECRET);
 console.log("SHOP_DOMAIN", SHOP_DOMAIN);
