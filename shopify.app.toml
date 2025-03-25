@@ -8,7 +8,7 @@ embedded = true
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 # use_legacy_install_flow = true
-scopes = "read_checkouts,write_checkouts,read_locations,read_inventory,write_inventory,read_checkout_branding_settings,write_checkout_branding_settings,read_shipping,write_shipping"
+scopes = "read_gift_cards,read_inventory,write_inventory,write_gift_cards,read_locations,write_locations,read_products,write_products,read_fulfillments,read_checkouts,write_checkouts,read_checkout_branding_settings,write_checkout_branding_settings,read_shipping,write_shipping,read_customers,read_product_listings"
 
 [auth]
 redirect_urls = [
