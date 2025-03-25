@@ -1,17 +1,17 @@
-import Redis from 'ioredis';
-import pkg from 'bullmq';
-import { RedisSessionStorage } from '@shopify/shopify-app-session-storage-redis';
+import Redis from "ioredis";
+import pkg from "bullmq";
+import { RedisSessionStorage } from "@shopify/shopify-app-session-storage-redis";
 
-import { REDIS_URL, REDIS_TLS_URL } from './vars/envs.js';
-import { workerUpdateCallback } from '../worker/worker.js';
-import logger from './logger.js';
+import { REDIS_URL, REDIS_TLS_URL } from "./vars/envs.js";
+import { workerUpdateCallback } from "../worker/worker.js";
+import logger from "./logger.js";
 
 const { Worker, Queue } = pkg;
 
 let redisClient, sessionStorage;
 
-console.log('REDIS_TLS_URL', REDIS_TLS_URL);
-console.log('REDIS_URL', REDIS_URL);
+console.log("REDIS_TLS_URL", REDIS_TLS_URL);
+console.log("REDIS_URL", REDIS_URL);
 
 try {
   // REDIS_TLS_URL
@@ -22,35 +22,34 @@ try {
 
   const url = new URL(REDIS_URL);
   sessionStorage = new RedisSessionStorage(url, {
-      url: url.toString(),
-      socket: {
-        tls: true,
-        rejectUnauthorized: false,
-      },
-      onError(error) {
-        console.error(`RedisSessionStorage err:  ${error}`);
-      },
-    })
-  
+    url: url.toString(),
+    socket: {
+      tls: true,
+      rejectUnauthorized: false,
+    },
+    onError(error) {
+      console.error(`RedisSessionStorage err:  ${error}`);
+    },
+  });
 } catch (error) {
-  logger.error('redis connection error: ' + error);
-  console.log('redis connection error: ', error);
+  logger.error("redis connection error: " + error);
+  console.log("redis connection error: ", error);
 }
 
 const updateInventoryLevelsWebhookQueue = new Queue(
-  'updateInventoryLevelsWebhookQueue',
+  "updateInventoryLevelsWebhookQueue",
   {
     connection: redisClient,
   }
 );
 
 const updateInventoryLevelsWorker = new Worker(
-  'updateInventoryLevelsWebhookQueue',
+  "updateInventoryLevelsWebhookQueue",
   workerUpdateCallback,
   { connection: redisClient, removeOnComplete: { count: 0 } }
 );
 
-// const updateInventoryLevelsWebhookQueue = 
+// const updateInventoryLevelsWebhookQueue =
 // new Queue(
 //   'updateInventoryLevelsWebhookQueue',
 //   {

@@ -25,6 +25,8 @@ function Extension() {
 
   const canBlockProgress = useExtensionCapability('block_progress');
 
+  console.log('canBlockProgress', canBlockProgress);
+
   const { countryCode } = useShippingAddress();
 
   const { lines } = useApi();
@@ -101,11 +103,20 @@ function Extension() {
     );
   }
 
+  const isPlural = () => {
+    if (unavailableVariants?.length === 1) {
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <>
       {unavailableVariants?.length > 0 ? (
         <Banner title='Please note!' status='critical'>
-          Next items in your cart are out of stock:{' '}
+          Next item{isPlural() ? 's' : ''} in your cart{' '}
+          {isPlural() ? 'are' : 'is'} out of stock:{' '}
           {unavailableVariants?.join(', ')}
         </Banner>
       ) : (

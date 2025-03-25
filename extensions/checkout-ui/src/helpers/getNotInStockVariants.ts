@@ -17,11 +17,23 @@ export function getNotInStockVariants({
     );
 
     if (searchedItem) {
-      const stock = searchedItem?.locations.find((stockItem) =>
-        stockItem.stockCoverage.includes(userCountryCode)
+      const stocksQuantity = searchedItem?.locations?.reduce(
+        (acc: number, location) => {
+          if (
+            location?.stockCoverage?.includes(userCountryCode) &&
+            location?.quantity > 0
+          ) {
+            acc += location?.quantity;
+          }
+
+          return acc;
+        },
+        0
       );
 
-      if (stock && stock?.quantity > 0) {
+      console.log('stocksQuantity', stocksQuantity);
+
+      if (stocksQuantity > 0) {
         return false;
       } else {
         return true;

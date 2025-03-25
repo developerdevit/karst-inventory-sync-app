@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { Card, Page, Layout, BlockStack, Text } from '@shopify/polaris';
-import { TitleBar } from '@shopify/app-bridge-react';
+import { useState } from "react";
+import { Card, Page, Layout, BlockStack, Text } from "@shopify/polaris";
+import { TitleBar } from "@shopify/app-bridge-react";
 
-import LogFilesList from '../components/LogFilesList';
-import Loader from '../components/Loader';
-import { useAuthenticatedFetch } from '../hooks';
-import { prepareInfoData } from '../utils/prepareInfoData';
+import LogFilesList from "../components/LogFilesList";
+import Loader from "../components/Loader";
+import { useAuthenticatedFetch } from "../hooks";
+import { prepareInfoData } from "../utils/prepareInfoData";
 
 export default function InfoPage() {
   const [loading, setLoading] = useState(false);
@@ -19,8 +19,8 @@ export default function InfoPage() {
       setLoading(true);
       setData(null);
 
-      fetch('/api/info', {
-        method: 'GET',
+      fetch("/api/info", {
+        method: "GET",
       })
         .then((res) => res.json())
         .then((res) => {
@@ -30,31 +30,7 @@ export default function InfoPage() {
         })
         .finally(() => setLoading(false));
     } catch (error) {
-      console.log('fetchInfo error: ', error);
-    }
-  };
-
-  const fetchTest = () => {
-    try {
-      setLoading(true);
-
-      fetch('/api/test', {
-        method: 'GET',
-      }).finally(() => setLoading(false));
-    } catch (error) {
-      console.log('fetchTest error: ', error);
-    }
-  };
-
-  const fetchRemoveLocations = () => {
-    try {
-      setLoading(true);
-
-      fetch('/api/remove-old-locations', {
-        method: 'DELETE',
-      }).finally(() => setLoading(false));
-    } catch (error) {
-      console.log('fetchRemoveLocations error: ', error);
+      console.log("fetchInfo error: ", error);
     }
   };
 
@@ -64,15 +40,15 @@ export default function InfoPage() {
         cur.map((_, index) => (index === idx ? true : false))
       );
       fetch(`/api/download-logs?fileName=${fileName}`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          Accept: 'text/plain',
+          Accept: "text/plain",
         },
       })
         .then((res) => res.blob())
         .then((blob) => {
           const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
+          const a = document.createElement("a");
           a.href = url;
           a.download = fileName;
           document.body.appendChild(a);
@@ -81,17 +57,17 @@ export default function InfoPage() {
         })
         .finally(() => setFileLoading((cur) => cur.map(() => false)));
     } catch (error) {
-      console.log('fetchDownloadFile error: ', error);
+      console.log("fetchDownloadFile error: ", error);
     }
   };
 
   return (
     <Page narrowWidth>
       <TitleBar
-        title={'Inventory Sync App'}
+        title={"Inventory Sync App"}
         secondaryActions={[
           {
-            content: 'Fetch info',
+            content: "Fetch info",
             destructive: false,
             onAction: fetchInfo,
             loading: loading,
@@ -102,33 +78,33 @@ export default function InfoPage() {
         <Layout.Section>
           <Card>
             <BlockStack>
-              <Text as='h2' variant='headingLg'>
+              <Text as="h2" variant="headingLg">
                 Info
               </Text>
               <Loader loading={loading} />
               {data && (
                 <>
                   {data?.serverState && (
-                    <div style={{ marginTop: '1rem' }}>
-                      <Text as='h2' variant='headingMd'>
+                    <div style={{ marginTop: "1rem" }}>
+                      <Text as="h2" variant="headingMd">
                         VPS instance status:
                       </Text>
-                      <div style={{ marginTop: '0.25rem' }}>
+                      <div style={{ marginTop: "0.25rem" }}>
                         {prepareInfoData(data?.serverState)}
                       </div>
                     </div>
                   )}
-                  <div style={{ marginTop: '1rem' }}>
-                    <Text as='h2' variant='headingMd'>
+                  <div style={{ marginTop: "1rem" }}>
+                    <Text as="h2" variant="headingMd">
                       Redis storage status:
                     </Text>
-                    <div style={{ marginTop: '0.25rem' }}>
+                    <div style={{ marginTop: "0.25rem" }}>
                       {prepareInfoData(data?.info)}
                     </div>
                   </div>
                   {data?.files && Array.isArray(data?.files) && (
-                    <div style={{ marginTop: '1rem' }}>
-                      <Text as='h2' variant='headingMd'>
+                    <div style={{ marginTop: "1rem" }}>
+                      <Text as="h2" variant="headingMd">
                         Logs files:
                       </Text>
 
@@ -142,7 +118,7 @@ export default function InfoPage() {
                 </>
               )}
               {!data && !loading && (
-                <p style={{ marginTop: '0.5rem' }}>No data fetched...</p>
+                <p style={{ marginTop: "0.5rem" }}>No data fetched...</p>
               )}
             </BlockStack>
           </Card>
