@@ -5,7 +5,7 @@ import serveStatic from "serve-static";
 
 import shopify from "./config/shopify.js";
 import { webhookHandlers } from "./webhooks/index.js";
-import { PORT, HYDROGEN_SECRET } from "./config/vars/envs.js";
+import { PORT, HYDROGEN_SECRET, SHOP_DOMAIN } from "./config/vars/envs.js";
 import { STATIC_PATH, __dirname } from "./config/vars/constants.js";
 import { initialSyncScript } from "./script/initialSyncScript.js";
 import { redisClient } from "./config/redis.js";
@@ -52,12 +52,10 @@ app.get("/api/company_location_catalogs/:id", async (req, res) => {
 
   const company_location_id = req.params?.id;
 
-  const oflineSessionId = shopify?.api?.session?.getOfflineId(
-    "karst-dev-test-store.myshopify.com"
-  );
+  const offlineSessionId = shopify?.api?.session?.getOfflineId(SHOP_DOMAIN);
 
   const session = await shopify?.config?.sessionStorage?.loadSession(
-    oflineSessionId
+    offlineSessionId
   );
 
   const response = await shopifyService.getCompanyLocationsCatalogs(
